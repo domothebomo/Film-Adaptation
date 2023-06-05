@@ -16,6 +16,10 @@ class Level1 extends Phaser.Scene {
         this.load.image('radio', './sprites/radio.png');
 
         this.load.spritesheet('pilot_walk', './sprites/pilot_walk.png', {frameWidth: 12, frameHeight: 28, startFrame: 0, endFrame: 1});
+
+        // https://freesound.org/s/584597/
+        this.load.audio('ambience', './audio/plane_ambience.wav');
+        this.load.audio('blip', './audio/blip3.wav');
         
     }
 
@@ -53,6 +57,18 @@ class Level1 extends Phaser.Scene {
                 unlocked: true,
                 onCompletion: () => {}
             }));
+        }
+
+        // AUDIO
+        {
+            this.ambience = this.sound.add("ambience", {
+                volume: 0.1,
+                loop: true
+            });
+            this.ambience.play();
+            this.blip = this.sound.add("blip", {
+                volume: 0.1,
+            });
         }
 
         //radioDialogue[0].beginDialogue();

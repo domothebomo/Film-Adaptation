@@ -90,6 +90,10 @@ class Dialogue {
             callback: () => {
                 this.scene.dialogueText.text += text[letterCount];
                 letterCount += 1;
+                if (text[letterCount] != " ") {
+                    this.scene.blip.play();
+                }
+                //this.scene.blip.play();
             },
             repeat: text.length - 1,
             delay: 40
