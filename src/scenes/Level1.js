@@ -23,6 +23,7 @@ class Level1 extends Phaser.Scene {
         // AUDIO
         this.load.audio('ambience', './audio/plane_ambience.wav'); // https://freesound.org/s/584597/
         this.load.audio('blip', './audio/blip4.wav');
+        this.load.audio('walk', './audio/walk.wav');
         
     }
 
@@ -34,6 +35,7 @@ class Level1 extends Phaser.Scene {
 
         // CONTROLS
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
 
         // PLAYER CLASS
         this.player = new Player(this, game.config.width, game.config.height, 'pilot').setDepth(1).setScale(4,4);     
@@ -83,6 +85,10 @@ class Level1 extends Phaser.Scene {
             this.blip = this.sound.add("blip", {
                 volume: 0.1,
             });
+            this.walk = this.sound.add("walk", {
+                volume: 0.2,
+                loop: true
+            });
         }
 
         // DIALOGUE BOX UI
@@ -94,6 +100,10 @@ class Level1 extends Phaser.Scene {
         this.objectProfile.setScrollFactor(0);
         this.playerProfile = this.add.sprite(game.config.width - 66 - 96, 66, 'pilot_head').setOrigin(0,0).setScale(4,0).setDepth(1);
         this.playerProfile.setScrollFactor(0);
+
+        // OTHER UI
+        this.exitTip = this.add.text(620, 610, 'Press ESC to exit to main menu', {color: '#000000', fontSize: '18px'});
+        this.exitTip.setScrollFactor(0);
 
         // INTERACTABLE OBJECTS + CHARACTERS
         this.radio = new Interactable(this, game.config.width + 390, game.config.height - 30, 'radio', radioDialogue);
@@ -130,6 +140,10 @@ class Level1 extends Phaser.Scene {
         this.radio.update();
         this.codebook.update();
 
+        if (Phaser.Input.Keyboard.JustDown(keyESC)) {
+            this.ambience.stop();
+            this.scene.start('titleScene');
+        }
 
     }
 
