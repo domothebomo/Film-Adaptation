@@ -3,8 +3,10 @@ class Interactable extends Phaser.Physics.Arcade.Sprite {
         super(scene, x, y, sprite);
 
         this.scene = scene;
-        this.dialogues = this.dialogues;
+        this.dialogues = dialogues;
         this.dialogueProgress = 0;
+        this.dialoguesCompleted = 0;
+        this.speaking = false;
         this.scene.add.existing(this);
         this.scene.physics.add.existing(this);
         this.setScale(4,4);
@@ -18,6 +20,8 @@ class Interactable extends Phaser.Physics.Arcade.Sprite {
         //this.on('overlapstart', () => {console.log('hi')});
         //this.on('overlapend', () => {console.log('bye')});
         this.scene.physics.add.overlap(this.scene.player, this.interactRadius);
+
+        //console.log(this.dialogues[this.dialoguesCompleted]);
     }
 
     update() {
@@ -34,7 +38,32 @@ class Interactable extends Phaser.Physics.Arcade.Sprite {
             }
         }
         if (this.near && Phaser.Input.Keyboard.JustDown(keySPACE)) {
-            console.log('hello');
+            //console.log('hello');
+            if (!this.speaking) {
+                //console.log('hello');
+                this.speaking = true;
+                this.scene.player.interacting = true;
+                this.dialogues[this.dialoguesCompleted].beginDialogue();
+                //this.dialogueProgress += 1;
+            } else if (this.dialogues[this.dialoguesCompleted].progress < this.dialogues[this.dialoguesCompleted].dialogue.text.length) {
+                //console.log('i see');
+                this.dialogues[this.dialoguesCompleted].continueDialogue();
+                //this.dialogueProgress += 1;
+            } else {
+                //console.log('bye');
+                //this.speaking = false;
+                if (this.dialogues[this.dialoguesCompleted].endDialogue()) {
+                    this.speaking = false;
+                    this.scene.player.interacting = false;
+                    if (this.dialoguesCompleted < this.dialogues.length - 1) {
+                        this.dialoguesCompleted += 1;
+                    }
+                }
+                //this.dialogueProgress = 0;
+                // if (this.dialoguesCompleted < this.dialogues.length - 1) {
+                //     this.dialoguesCompleted += 1;
+                // }
+            }
         }
 
     }

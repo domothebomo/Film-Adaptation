@@ -6,7 +6,8 @@ class Level1 extends Phaser.Scene {
     preload() {
         this.load.path = './assets/';
 
-        this.load.image('background', './sprites/skyline.png');
+        this.load.image('background', './sprites/sky.png');
+        this.load.image('plane', './sprites/plane.png');
         this.load.image('dialogue_box', './sprites/dialogue_box.png');
 
         this.load.image('pilot', './sprites/pilot.png');
@@ -21,35 +22,59 @@ class Level1 extends Phaser.Scene {
     create() {
         //this.player = this.physics.add.sprite(game.config.width/2, game.config.height/2, 'pilot').setScale(2,2);
 
-        this.add.tileSprite(0,0, game.config.width * 2, game.config.height * 2, 'background').setOrigin(0,0);      
-        this.add.text(game.config.width/2, game.config.height/2, 'PLAY', {fontSize: '25px'});  
+        this.background = this.add.tileSprite(0,0, game.config.width * 2, game.config.height * 2, 'background').setOrigin(0,0).setScale(2,2);    
+        this.plane = this.add.sprite(0,0, 'plane').setScale(4,4).setOrigin(0,0);  
+        //this.add.text(game.config.width/2, game.config.height/2, 'PLAY', {fontSize: '25px'});  
 
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
-        this.player = new Player(this, game.config.width/2, game.config.height/2, 'pilot').setScale(4,4);
+        this.player = new Player(this, game.config.width, game.config.height, 'pilot').setScale(4,4);
         
 
         // DIALOGUE
         let radioDialogue = [];
         {
             // RADIO
-            //let radioDialogue = [];
-            radioDialogue.push[new Dialogue(this, {
-                text: `BEEP, BEEP, BEEP`,
+            radioDialogue.push(new Dialogue(this, {
+                text: [
+                        //`BEEP, BEEP, BEEP`,
+                        `BEEP BEEP BEEP BEEP BEEP BEEP`,
+                        `*The radio is flashing a new code, FDG 135*`                      
+                      ],
                 response: null,
                 unlocked: true,
-                end: false
-            })];
+                onCompletion: () => {}
+            }));
+            radioDialogue.push(new Dialogue(this, {
+                text: [
+                        `zzz...            \nthe radio is silent...`                      
+                      ],
+                response: null,
+                unlocked: true,
+                onCompletion: () => {}
+            }));
         }
 
-        this.dialogueBox = this.add.sprite(30, 30, 'dialogue_box').setOrigin(0,0).setScale(1,1);
+        //radioDialogue[0].beginDialogue();
+        // this.blah = new Dialogue(this, {
+        //     text: `BEEP, BEEP, BEEP`,
+        //     response: null,
+        //     unlocked: true,
+        //     end: false
+        // });
+        // this.blah.beginDialogue();
+
+        this.dialogueBox = this.add.sprite(30, 30, 'dialogue_box').setOrigin(0,0).setScale(1,0).setDepth(1);
         this.dialogueBox.setScrollFactor(0);
-        this.dialogueText = this.add.text(198, 66, 'BEEP', {fontSize: '25px'}).setOrigin(0,0).setWordWrapWidth(491).setAlign('left');
-        this.playerProfile = this.add.sprite(66, 66, 'pilot_head').setOrigin(0,0).setFlipX(true).setScale(4,4);
-        this.objectProfile = this.add.sprite(game.config.width - 66 - 96, 66, 'radio').setOrigin(0,0).setScale(4,4);
+        this.dialogueText = this.add.text(198, 66, '', {fontSize: '20px'}).setOrigin(0,0).setWordWrapWidth(600).setAlign('left').setDepth(1);
+        this.dialogueText.setScrollFactor(0);
+        this.objectProfile = this.add.sprite(66, 66, 'radio').setOrigin(0,0).setScale(4,0).setDepth(1);
+        this.objectProfile.setScrollFactor(0);
+        this.playerProfile = this.add.sprite(game.config.width - 66 - 96, 66, 'pilot_head').setOrigin(0,0).setScale(4,0).setDepth(1);
+        this.playerProfile.setScrollFactor(0);
 
         //this.add.sprite(game.config.width/2 - 400, game.config.height/2 + 100, 'pilot_head').setScale(4,4);
-        this.radio = new Interactable(this, game.config.width/2 - 400, game.config.height/2 + 100, 'radio', radioDialogue);
+        this.radio = new Interactable(this, game.config.width + 400, game.config.height - 30, 'radio', radioDialogue);
         //this.radioZone = this.add.zone(this.radio.x, this.radio.y, this.radio.height * 2, this.radio.width * 2);
         //this.physics.add.overlap(this.player, this.radioZone, () => {console.log('hi')});
 
@@ -77,6 +102,8 @@ class Level1 extends Phaser.Scene {
     }
 
     update() {
+        this.background.tilePositionX -= 10;
+
         this.player.update();
         this.radio.update();
 
