@@ -53,11 +53,11 @@ class Level1 extends Phaser.Scene {
                       ],
                 response: null,
                 unlocked: true,
-                onCompletion: () => {console.log('yipee')}
+                onCompletion: () => {this.codebook.dialogues[1].dialogue.unlocked = true}
             }));
             radioDialogue.push(new Dialogue(this, {
                 text: [
-                        `zzz...            \nthe radio is silent...`                      
+                        `zzz...            \nthe radio is silent... the code 'FGD 135' is still displayed...`                      
                       ],
                 response: null,
                 unlocked: true,
@@ -71,6 +71,14 @@ class Level1 extends Phaser.Scene {
                       ],
                 response: null,
                 unlocked: true,
+                onCompletion: () => {}
+            }));
+            codebookDialogue.push(new Dialogue(this, {
+                text: [
+                        `FGD | 135 | Wing attack Plan R`                      
+                      ],
+                response: null,
+                unlocked: false,
                 onCompletion: () => {}
             }));
         }

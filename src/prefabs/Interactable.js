@@ -51,6 +51,10 @@ class Interactable extends Phaser.Physics.Arcade.Sprite {
         // INITIATE DIALOGUE BETWEEN PLAYER AND THIS INTERACTABLE
         if (this.near && Phaser.Input.Keyboard.JustDown(keySPACE)) {
 
+            if (!this.dialogues[this.dialoguesCompleted].dialogue.unlocked) {
+                this.dialoguesCompleted -= 1;
+            }
+
             // BEGIN DIALOGUE
             if (!this.speaking) {
                 //console.log('hello');
