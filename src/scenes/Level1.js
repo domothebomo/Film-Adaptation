@@ -32,7 +32,7 @@ class Level1 extends Phaser.Scene {
 
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
-        this.player = new Player(this, game.config.width, game.config.height, 'pilot').setScale(4,4);
+        this.player = new Player(this, game.config.width, game.config.height, 'pilot').setDepth(1).setScale(4,4);
         
 
         // DIALOGUE

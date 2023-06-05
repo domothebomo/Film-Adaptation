@@ -6,6 +6,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.scene.add.existing(this);
         this.scene.physics.add.existing(this);
         this.body.setCollideWorldBounds(true);
+        this.body.setSize(12, 5);
+        this.body.setOffset(0, 20);
 
         this.cursors = this.scene.input.keyboard.createCursorKeys();
         this.moveSpeed = 150;
