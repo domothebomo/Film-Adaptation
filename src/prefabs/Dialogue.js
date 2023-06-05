@@ -1,9 +1,15 @@
 class Dialogue {
     constructor(scene, dialogue) {
-        // Param 1: Array/Object of every dialogue box
-        // Param 2: Array/Object of player response options
-        this.scene = scene;
+
+        // DIALOGUE OBJECT ATTRIBUTES:
+        // text: The text to be displayed during dialogue
+        // response: Dialogue options if player input is requested
+        // unlocked: Whether this dialogue can be accessed yet
+        // onCompletion: Function that triggers once dialogue finishes
         this.dialogue = dialogue;
+
+        // OTHER ATTRIBUTES
+        this.scene = scene;
         this.progress = 0;
     }
 
@@ -17,6 +23,7 @@ class Dialogue {
     }
 
     continueDialogue() {
+        // CHECK IF PREVIOUS DIALOGUE IS STILL PLAYING, COMPLETE DIALOGUE IF SO
         if (this.scene.dialogueText.text != this.dialogue.text[this.progress - 1]) {
             //console.log('bruh')
             this.scene.dialogueText.text = this.dialogue.text[this.progress - 1];
@@ -29,6 +36,7 @@ class Dialogue {
     }
 
     endDialogue() {
+        // CHECK IF PREVIOUS DIALOGUE IS STILL PLAYING, COMPLETE DIALOGUE IF SO
         if (this.scene.dialogueText.text != this.dialogue.text[this.progress - 1]) {
             //console.log('bruh')
             this.scene.dialogueText.text = this.dialogue.text[this.progress - 1];
@@ -37,6 +45,7 @@ class Dialogue {
         } else {
             this.progress = 0;
             this.closeDialogueBox();
+            this.dialogue.onCompletion();
             return true;
         };
     }
@@ -96,7 +105,7 @@ class Dialogue {
                 //this.scene.blip.play();
             },
             repeat: text.length - 1,
-            delay: 40
+            delay: 50
         });
         //console.log(this.rollout);
     }
