@@ -16,6 +16,7 @@ class Level1 extends Phaser.Scene {
 
         this.load.image('radio', './sprites/radio.png');
         this.load.image('codebook', './sprites/codebook.png');
+        this.load.image('cockpit', './sprites/cockpit.png');
 
         // SPRITESHEETS
         this.load.spritesheet('pilot_walk', './sprites/pilot_walk.png', {frameWidth: 12, frameHeight: 28, startFrame: 0, endFrame: 1});
@@ -43,13 +44,14 @@ class Level1 extends Phaser.Scene {
         // DIALOGUE
         let radioDialogue = [];
         let codebookDialogue = [];
+        let cockpitDialogue = [];
         {
             // RADIO
             radioDialogue.push(new Dialogue(this, {
                 text: [
                         //`BEEP, BEEP, BEEP`,
                         `BEEP BEEP BEEP BEEP BEEP BEEP`,
-                        `*The radio is flashing a new code from command, 'FGD 135'*`                      
+                        `*The CRM-114 Discriminator is flashing a new code from command, 'FGD 135'*`                      
                       ],
                 response: null,
                 unlocked: true,
@@ -57,10 +59,20 @@ class Level1 extends Phaser.Scene {
             }));
             radioDialogue.push(new Dialogue(this, {
                 text: [
-                        `zzz...            \nthe radio is silent... the code 'FGD 135' is still displayed...`                      
+                        `zzz...            \nthe discriminator is silent... the code 'FGD 135' is still displayed...`                      
                       ],
                 response: null,
                 unlocked: true,
+                onCompletion: () => {}
+            }));
+            radioDialogue.push(new Dialogue(this, {
+                text: [
+                        `*You send a confirmation request through the discriminator*`,
+                        `CONFIRMED. RED ALERT.`,
+                        `*God help us all...*`                      
+                      ],
+                response: null,
+                unlocked: false,
                 onCompletion: () => {}
             }));
 
@@ -75,12 +87,26 @@ class Level1 extends Phaser.Scene {
             }));
             codebookDialogue.push(new Dialogue(this, {
                 text: [
-                        `FGD | 135 | Wing attack Plan R`                      
+                        `*You thumb through the codebook, looking for the new code's deciphering*`,
+                        `FGD | 135 | Wing attack Plan R`,
+                        `*You recognize Plan R all too well... A nuclear strike*`,
+                        `*You better use the discriminator to confirm with base*`                      
                       ],
                 response: null,
                 unlocked: false,
+                onCompletion: () => {this.radio.dialogues[2].dialogue.unlocked = true}
+            }));
+
+            // COCKPIT
+            cockpitDialogue.push(new Dialogue(this, {
+                text: [
+                        `*Shouldn't someone be flying this thing?*`                      
+                      ],
+                response: null,
+                unlocked: true,
                 onCompletion: () => {}
             }));
+            
         }
 
         // AUDIO
@@ -116,6 +142,7 @@ class Level1 extends Phaser.Scene {
         // INTERACTABLE OBJECTS + CHARACTERS
         this.radio = new Interactable(this, game.config.width + 390, game.config.height - 30, 'radio', radioDialogue);
         this.codebook = new Interactable(this, game.config.width + 490, game.config.height + 75, 'codebook', codebookDialogue);
+        this.cockpit = new Interactable(this, game.config.width-690, game.config.height + 40, 'cockpit', cockpitDialogue);
 
         // CAMERA
         this.cameras.main.setBounds(0, 0, game.config.width * 2, game.config.height * 2);
@@ -147,6 +174,7 @@ class Level1 extends Phaser.Scene {
         // UPDATE INTERACTABLE OBJECTS + CHARACTERS
         this.radio.update();
         this.codebook.update();
+        this.cockpit.update();
 
         if (Phaser.Input.Keyboard.JustDown(keyESC)) {
             this.ambience.stop();

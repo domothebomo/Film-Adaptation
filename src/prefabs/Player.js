@@ -16,7 +16,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.cursors = this.scene.input.keyboard.createCursorKeys();
 
         // ATTRIBUTES
-        this.moveSpeed = 150;
+        this.moveSpeed = 200;
         this.interacting = false;
         this.walking = false;
 
