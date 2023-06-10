@@ -16,7 +16,6 @@ class Dialogue {
     }
 
     beginDialogue() {
-        //console.log('wow');
         this.progress = 0;
         this.openDialogueBox();
         this.rolloutDialogue(this.dialogue.text[this.progress]);
@@ -27,20 +26,17 @@ class Dialogue {
     continueDialogue() {
         // CHECK IF PREVIOUS DIALOGUE IS STILL PLAYING, COMPLETE DIALOGUE IF SO
         if (this.scene.dialogueText.text != this.dialogue.text[this.progress - 1]) {
-            //console.log('bruh')
             this.scene.dialogueText.text = this.dialogue.text[this.progress - 1];
             this.rollout.remove();
         } else {
             this.rolloutDialogue(this.dialogue.text[this.progress]);
             this.progress += 1;
         }
-        //console.log(this.progress);
     }
 
     endDialogue() {
         // CHECK IF PREVIOUS DIALOGUE IS STILL PLAYING, COMPLETE DIALOGUE IF SO
         if (this.scene.dialogueText.text != this.dialogue.text[this.progress - 1]) {
-            //console.log('bruh')
             this.scene.dialogueText.text = this.dialogue.text[this.progress - 1];
             this.rollout.remove();
             return false;
@@ -57,7 +53,6 @@ class Dialogue {
             targets: [this.scene.dialogueBox],
             duration: 200,
             scaleY: {from: 0, to: 1},
-            //alpha: {from: 0, to: 1},
             ease: 'Linear'
 
         });
@@ -65,7 +60,6 @@ class Dialogue {
             targets: [this.scene.playerProfile, this.scene.objectProfile],
             duration: 200,
             scaleY: {from: 0, to: 4},
-            //alpha: {from: 0, to: 1},
             ease: 'Linear'
 
         });
@@ -77,7 +71,6 @@ class Dialogue {
             targets: [this.scene.dialogueBox],
             duration: 100,
             scaleY: {from: 1, to: 0},
-            //alpha: {from: 0, to: 1},
             ease: 'Linear'
 
         });
@@ -85,7 +78,6 @@ class Dialogue {
             targets: [this.scene.playerProfile, this.scene.objectProfile],
             duration: 100,
             scaleY: {from: 4, to: 0},
-            //alpha: {from: 0, to: 1},
             ease: 'Linear'
 
         });
@@ -104,12 +96,10 @@ class Dialogue {
                 if (text[letterCount] != " ") {
                     this.scene.blip.play();
                 }
-                //this.scene.blip.play();
             },
             repeat: text.length - 1,
             delay: 50
         });
-        //console.log(this.rollout);
     }
 
 }

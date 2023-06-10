@@ -76,7 +76,6 @@ class Level1 extends Phaser.Scene {
             // RADIO
             radioDialogue.push(new Dialogue(this, {
                 text: [
-                        //`BEEP, BEEP, BEEP`,
                         `BEEP BEEP BEEP BEEP BEEP BEEP`,
                         `*The CRM-114 Discriminator is flashing a new code from command, 'FGD 135'*`                      
                       ],
@@ -138,8 +137,6 @@ class Level1 extends Phaser.Scene {
                 response: null,
                 unlocked: false,
                 onCompletion: () => {
-                    //this.radio.dialogues[2].dialogue.unlocked = true;
-                    //this.radio.dialoguesCompleted = 2;
                     this.kong.dialogues[1].dialogue.unlocked = true;
                     this.kong.dialoguesCompleted = 1;
                 }
@@ -205,7 +202,6 @@ class Level1 extends Phaser.Scene {
                             this.ominousText = this.add.text(game.config.width/2, game.config.height/2, 'TO BE CONTINUED...', {fontSize: '30px'}).setOrigin(0.5,0.5).setDepth(2);
                             this.ominousText.setScrollFactor(0);
                             this.exitTip.setColor('#FFFFFF');
-                            //this.exitTip.set
                         }
                     });
                 },
@@ -219,7 +215,6 @@ class Level1 extends Phaser.Scene {
                 volume: 0.1,
                 loop: true
             });
-            //this.music.play();
             this.ambience = this.sound.add("ambience", {
                 volume: 0.1,
                 loop: true
@@ -233,10 +228,6 @@ class Level1 extends Phaser.Scene {
                 loop: true
             });
         }
-
-        //this.ominousText = this.add.text(game.config.width/2, game.config.height/2, 'TO BE CONTINUED...', {fontSize: '30px'}).setOrigin(0.5,0.5);
-        //this.ominousText.setScrollFactor(0);
-        //this.transitionScreen = this.add.rectangle(0,0, game.config.width*4, game.config.height*4, '0x000000', 1);
 
         // DIALOGUE BOX UI
         this.dialogueBox = this.add.sprite(30, 30, 'dialogue_box').setOrigin(0,0).setScale(1,0).setDepth(1);

@@ -14,8 +14,7 @@ class Title extends Phaser.Scene {
   create() {
 
     // BACKGROUND SPRITES
-    this.background = this.add.tileSprite(0,0, game.config.width * 2, game.config.height * 2, 'background').setOrigin(0,0);    
-    //this.plane = this.add.sprite(0,0, 'plane').setScale(2,2).setOrigin(0,0);  
+    this.background = this.add.tileSprite(0,0, game.config.width * 2, game.config.height * 2, 'background').setOrigin(0,0);     
     
 
     // TITLE TEXT
@@ -39,7 +38,6 @@ class Title extends Phaser.Scene {
     });
     this.playButton.on('pointerdown', () => {
       this.scene.start('level1Scene');
-      //console.log('play');
     });
 
     // SCENE SELECT MODE BUTTON
