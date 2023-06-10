@@ -1,3 +1,5 @@
+// The Player Class: Controls movement and attributes specific to the player character
+//
 class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, sprite) {
         super(scene, x, y, sprite);
@@ -10,7 +12,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         // PHYSICS + HITBOX
         this.body.setCollideWorldBounds(true);
         this.body.setSize(12, 5);
-        this.body.setOffset(0, 20);
+        this.body.setOffset(0, 23);
 
         // USER CONTROLS
         this.cursors = this.scene.input.keyboard.createCursorKeys();

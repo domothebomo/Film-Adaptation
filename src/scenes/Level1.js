@@ -11,17 +11,24 @@ class Level1 extends Phaser.Scene {
         this.load.image('plane', './sprites/plane.png');
         this.load.image('dialogue_box', './sprites/dialogue_box.png');
 
+        this.load.image('plane_hbounds', './sprites/plane_hbounds.png');
+        this.load.image('plane_vbounds', './sprites/plane_vbounds.png');
+
         this.load.image('pilot', './sprites/pilot.png');
         this.load.image('pilot_head', './sprites/pilot_head.png');
 
         this.load.image('radio', './sprites/radio.png');
         this.load.image('codebook', './sprites/codebook.png');
         this.load.image('cockpit', './sprites/cockpit.png');
+        this.load.image('kong', './sprites/kong.png');
+        this.load.image('kong_hat', './sprites/kong_hat.png');
+        this.load.image('kong_head', './sprites/kong_head.png');
 
         // SPRITESHEETS
         this.load.spritesheet('pilot_walk', './sprites/pilot_walk.png', {frameWidth: 12, frameHeight: 28, startFrame: 0, endFrame: 1});
 
         // AUDIO
+        this.load.audio('music', './audio/hummm.mp3');
         this.load.audio('ambience', './audio/plane_ambience.wav'); // https://freesound.org/s/584597/
         this.load.audio('blip', './audio/blip4.wav');
         this.load.audio('walk', './audio/walk.wav');
@@ -39,12 +46,32 @@ class Level1 extends Phaser.Scene {
         keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
 
         // PLAYER CLASS
-        this.player = new Player(this, game.config.width, game.config.height, 'pilot').setDepth(1).setScale(4,4);     
+        this.player = new Player(this, game.config.width + 200, game.config.height + 25, 'pilot').setDepth(1).setScale(4,4);   
+
+        this.ending = false;
+
+        // PLANE BOUNDS
+        this.upperBound = this.physics.add.sprite(game.config.width - 60, game.config.height - 16, 'plane_hbounds').setScale(4,4).setAlpha(0);
+        this.physics.add.collider(this.upperBound, this.player);
+        this.upperBound.body.immovable = true;
+
+        this.lowerBound = this.physics.add.sprite(game.config.width - 60, game.config.height + 136, 'plane_hbounds').setScale(4,4).setAlpha(0);
+        this.physics.add.collider(this.lowerBound, this.player);
+        this.lowerBound.body.immovable = true;
+
+        this.rightBound = this.physics.add.sprite(game.config.width + 528, game.config.height + 60, 'plane_vbounds').setScale(4,4).setAlpha(0);
+        this.physics.add.collider(this.rightBound, this.player);
+        this.rightBound.body.immovable = true;
+
+        this.leftBound = this.physics.add.sprite(game.config.width - 650, game.config.height + 60, 'plane_vbounds').setScale(4,4).setAlpha(0);
+        this.physics.add.collider(this.leftBound, this.player);
+        this.leftBound.body.immovable = true;
 
         // DIALOGUE
         let radioDialogue = [];
         let codebookDialogue = [];
         let cockpitDialogue = [];
+        let kongDialogue = [];
         {
             // RADIO
             radioDialogue.push(new Dialogue(this, {
@@ -55,7 +82,10 @@ class Level1 extends Phaser.Scene {
                       ],
                 response: null,
                 unlocked: true,
-                onCompletion: () => {this.codebook.dialogues[1].dialogue.unlocked = true}
+                onCompletion: () => {
+                    this.codebook.dialogues[1].dialogue.unlocked = true;
+                    this.codebook.dialoguesCompleted = 1;
+                }
             }));
             radioDialogue.push(new Dialogue(this, {
                 text: [
@@ -69,10 +99,22 @@ class Level1 extends Phaser.Scene {
                 text: [
                         `*You send a confirmation request through the discriminator*`,
                         `CONFIRMED. RED ALERT.`,
-                        `*God help us all...*`                      
+                        `*Confirmed... you should let the major know*`                      
                       ],
                 response: null,
                 unlocked: false,
+                onCompletion: () => {
+                    this.music.play();
+                    this.kong.dialogues[2].dialogue.unlocked = true;
+                    this.kong.dialoguesCompleted = 2;
+                }
+            }));
+            radioDialogue.push(new Dialogue(this, {
+                text: [
+                        `CONFIRMED. RED ALERT.`                      
+                      ],
+                response: null,
+                unlocked: true,
                 onCompletion: () => {}
             }));
 
@@ -87,14 +129,29 @@ class Level1 extends Phaser.Scene {
             }));
             codebookDialogue.push(new Dialogue(this, {
                 text: [
+                        `*Your standard issue codebook, containing aircraft communications codes and their corresponding decipherings*`,
                         `*You thumb through the codebook, looking for the new code's deciphering*`,
                         `FGD | 135 | Wing attack Plan R`,
-                        `*You recognize Plan R all too well... A nuclear strike*`,
-                        `*You better use the discriminator to confirm with base*`                      
+                        `*Wing attack Plan R...*`,
+                        `*You should inform Major Kong at the cockpit*`                      
                       ],
                 response: null,
                 unlocked: false,
-                onCompletion: () => {this.radio.dialogues[2].dialogue.unlocked = true}
+                onCompletion: () => {
+                    //this.radio.dialogues[2].dialogue.unlocked = true;
+                    //this.radio.dialoguesCompleted = 2;
+                    this.kong.dialogues[1].dialogue.unlocked = true;
+                    this.kong.dialoguesCompleted = 1;
+                }
+            }));
+            codebookDialogue.push(new Dialogue(this, {
+                text: [
+                        `*The codebook is left open, the code's translation still visible*`,
+                        `FGD | 135 | Wing attack Plan R`                      
+                      ],
+                response: null,
+                unlocked: true,
+                onCompletion: () => {}
             }));
 
             // COCKPIT
@@ -106,11 +163,63 @@ class Level1 extends Phaser.Scene {
                 unlocked: true,
                 onCompletion: () => {}
             }));
+
+            // MAJOR KONG
+            kongDialogue.push(new Dialogue(this, {
+                text: [
+                        `Hi Goldie. Anything to report?`                      
+                      ],
+                response: null,
+                unlocked: true,
+                onCompletion: () => {},
+            }));
+            kongDialogue.push(new Dialogue(this, {
+                text: [
+                        `*You inform Major Kong of the transmission*`,
+                        `... Maybe you better get a confirmation from base.`                      
+                      ],
+                response: null,
+                unlocked: false,
+                onCompletion: () => {
+                    this.radio.dialogues[2].dialogue.unlocked = true;
+                    this.radio.dialoguesCompleted = 2;
+                },
+            }));
+            kongDialogue.push(new Dialogue(this, {
+                text: [
+                        `*You inform Major Kong that the message from base has been confirmed*`,
+                        `... Well boys, I reckon this is it.`,
+                        `Nuclear combat toe-to-toe with the Ruskies...`
+                      ],
+                response: null,
+                unlocked: false,
+                
+                onCompletion: () => {
+                    this.ending = true;
+                    this.transitionScreen = this.add.rectangle(0,0, game.config.width*4, game.config.height*4, '#000000', 1).setDepth(1);
+                    this.tweens.add({
+                        targets: this.transitionScreen,
+                        alpha: {from: 0, to: 1},
+                        duration: 5000,
+                        onComplete: () => {
+                            this.ominousText = this.add.text(game.config.width/2, game.config.height/2, 'TO BE CONTINUED...', {fontSize: '30px'}).setOrigin(0.5,0.5).setDepth(2);
+                            this.ominousText.setScrollFactor(0);
+                            this.exitTip.setColor('#FFFFFF');
+                            //this.exitTip.set
+                        }
+                    });
+                },
+            }));
             
         }
 
         // AUDIO
         {
+            this.music = this.sound.add("music", {
+                volume: 0.1,
+                loop: true
+            });
+            //this.music.play();
             this.ambience = this.sound.add("ambience", {
                 volume: 0.1,
                 loop: true
@@ -125,6 +234,10 @@ class Level1 extends Phaser.Scene {
             });
         }
 
+        //this.ominousText = this.add.text(game.config.width/2, game.config.height/2, 'TO BE CONTINUED...', {fontSize: '30px'}).setOrigin(0.5,0.5);
+        //this.ominousText.setScrollFactor(0);
+        //this.transitionScreen = this.add.rectangle(0,0, game.config.width*4, game.config.height*4, '0x000000', 1);
+
         // DIALOGUE BOX UI
         this.dialogueBox = this.add.sprite(30, 30, 'dialogue_box').setOrigin(0,0).setScale(1,0).setDepth(1);
         this.dialogueBox.setScrollFactor(0);
@@ -136,13 +249,17 @@ class Level1 extends Phaser.Scene {
         this.playerProfile.setScrollFactor(0);
 
         // OTHER UI
-        this.exitTip = this.add.text(620, 610, 'Press ESC to exit to main menu', {color: '#000000', fontSize: '18px'});
+        this.exitTip = this.add.text(620, 610, 'Press ESC to exit to main menu', {color: '#000000', fontSize: '18px'}).setDepth(2);
         this.exitTip.setScrollFactor(0);
+
+        this.controlsTip = this.add.text(10, 10, 'Arrow keys to move, SPACE to interact with objects and progress dialogue', {color: '#000000', fontSize: '18px'}).setDepth(2);
+        this.controlsTip.setScrollFactor(0);
 
         // INTERACTABLE OBJECTS + CHARACTERS
         this.radio = new Interactable(this, game.config.width + 390, game.config.height - 30, 'radio', radioDialogue);
         this.codebook = new Interactable(this, game.config.width + 490, game.config.height + 75, 'codebook', codebookDialogue);
         this.cockpit = new Interactable(this, game.config.width-690, game.config.height + 40, 'cockpit', cockpitDialogue);
+        this.kong = new Interactable(this, game.config.width-600, game.config.height + 20, 'kong', kongDialogue, 'kong_head');
 
         // CAMERA
         this.cameras.main.setBounds(0, 0, game.config.width * 2, game.config.height * 2);
@@ -168,16 +285,20 @@ class Level1 extends Phaser.Scene {
         // BACKGROUND MOVEMENT
         this.background.tilePositionX -= 10;
 
-        // UPDATE PLAYER
-        this.player.update();
+        if (!this.ending) {
+            // UPDATE PLAYER
+            this.player.update();
 
-        // UPDATE INTERACTABLE OBJECTS + CHARACTERS
-        this.radio.update();
-        this.codebook.update();
-        this.cockpit.update();
+            // UPDATE INTERACTABLE OBJECTS + CHARACTERS
+            this.radio.update();
+            this.codebook.update();
+            this.cockpit.update();
+            this.kong.update();
+        }
 
         if (Phaser.Input.Keyboard.JustDown(keyESC)) {
             this.ambience.stop();
+            this.music.stop();
             this.scene.start('titleScene');
         }
 

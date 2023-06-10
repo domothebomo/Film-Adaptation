@@ -1,3 +1,5 @@
+// Class for dialogue between the player and an interactable instance. Each conversation is its own instance of this class
+//
 class Dialogue {
     constructor(scene, dialogue) {
 

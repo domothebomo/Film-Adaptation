@@ -39,7 +39,7 @@ class Title extends Phaser.Scene {
     });
     this.playButton.on('pointerdown', () => {
       this.scene.start('level1Scene');
-      console.log('play');
+      //console.log('play');
     });
 
     // SCENE SELECT MODE BUTTON
@@ -50,8 +50,7 @@ class Title extends Phaser.Scene {
       useHandCursor: true
     });
     this.modeButton.on('pointerdown', () => {
-      //this.scene.start('playScene');
-      console.log('select mode');
+      console.log('Coming soon!');
     });
 
     // CREDITS BUTTON
@@ -62,8 +61,7 @@ class Title extends Phaser.Scene {
       useHandCursor: true
     });
     this.creditsButton.on('pointerdown', () => {
-      //this.scene.start('playScene');
-      console.log('credits');
+      console.log('Coming soon!');
     });
 
     // TUTORIAL BUTTON
