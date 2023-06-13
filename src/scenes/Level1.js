@@ -347,9 +347,6 @@ class Level1 extends Phaser.Scene {
                         alpha: {from: 0, to: 1},
                         duration: 5000,
                         onComplete: () => {
-                            //this.ominousText = this.add.text(game.config.width/2, game.config.height/2, 'TO BE CONTINUED...', {fontSize: '30px'}).setOrigin(0.5,0.5).setDepth(2);
-                            //this.ominousText.setScrollFactor(0);
-                            //this.exitTip.setColor('#FFFFFF');
                             this.music.loop = false;
                             level += 1;
                             this.scene.start('transitionScene');
