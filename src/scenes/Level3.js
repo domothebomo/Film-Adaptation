@@ -18,7 +18,9 @@ class Level3 extends Phaser.Scene {
         this.load.image('dialogue_box', './sprites/dialogue_box.png');
 
         // INTERACTABLES
-
+        this.load.image('chart', './sprites/chart.png');
+        this.load.image('vending_machine', './sprites/vending_machine.png');
+        this.load.image('blank', './sprites/blank.png');
 
         // CHARACTERS
         this.load.image('strangelove', './sprites/strangelove.png');
@@ -60,17 +62,112 @@ class Level3 extends Phaser.Scene {
 
         // DIALOGUE
 
+        let boardDialogue = [];
+        let chartDialogue = [];
+        let muffleyDialogue = [];
+        let turgidsonDialogue = [];
+        let alexeiDialogue = [];
+        let officialDialogue = [];
+        {
+            // COUCH
+            boardDialogue.push(new Dialogue(this, {
+                text: [
+                        `*The Great Big Board of the War Room, showcasing a map of the Earth and relevant military data*`,
+                        `*It's currently displaying the recall proceedings of the 843rd Bomb Wing. All but four planes are shown retreating Russia, three of which are known to be shot down, while the fourth is currently unaccounted for*`          
+                      ],
+                speaker: [` `, ` `],
+                response: null,
+                unlocked: true,
+                onCompletion: () => {}
+            }));
+
+            chartDialogue.push(new Dialogue(this, {
+                text: [
+                        `*Your personal information chart, displaying scientific data for various elements and procedures regarding nuclear development*`,   
+                      ],
+                speaker: [` `],
+                response: null,
+                unlocked: true,
+                onCompletion: () => {}
+            }));
+
+            officialDialogue.push(new Dialogue(this, {
+                text: [
+                        `Greetings, Doctor.`,   
+                      ],
+                speaker: [`U.S. Official`],
+                response: null,
+                unlocked: true,
+                onCompletion: () => {}
+            }));
+
+            alexeiDialogue.push(new Dialogue(this, {
+                text: [
+                        `I can only hope my country's defenses are successful in preventing this catastrophe.`,   
+                      ],
+                speaker: [`Ambassador Alexei`],
+                response: null,
+                unlocked: true,
+                onCompletion: () => {}
+            }));
+        }
+
+
         // PLAYER CLASS
-        this.player = new Player(this, game.config.width - 250, game.config.height - 110, 'strangelove').setDepth(1).setScale(4,4);   
+        this.player = new Player(this, game.config.width + 100, 180, 'strangelove').setScale(4,4).setDepth(2);   
+        this.player.body.setSize(18, 8);
+        this.player.body.setOffset(0, 20);
         this.speakingTo = null;
         this.ending = false;
         this.paused = false;
 
         // BOUNDS
+        {
+            this.bound1 = this.physics.add.sprite(0, 45, 'plane_hbounds').setOrigin(0,0).setScale(10,11).setAlpha(0);
+            this.physics.add.collider(this.bound1, this.player);
+            this.bound1.body.immovable = true;
+
+            this.bound1 = this.physics.add.sprite(0, game.config.height*2 - 130, 'plane_hbounds').setOrigin(0,0).setScale(10,11).setAlpha(0);
+            this.physics.add.collider(this.bound1, this.player);
+            this.bound1.body.immovable = true;
+
+            this.bound3 = this.physics.add.sprite(115, 45, 'plane_vbounds').setOrigin(0,0).setScale(10,35).setAlpha(0);
+            this.physics.add.collider(this.bound3, this.player);
+            this.bound3.body.immovable = true;
+
+            this.bound3 = this.physics.add.sprite(game.config.width*2 - 195, 45, 'plane_vbounds').setOrigin(0,0).setScale(10,35).setAlpha(0);
+            this.physics.add.collider(this.bound3, this.player);
+            this.bound3.body.immovable = true;
+
+            this.tableBound = this.physics.add.sprite(game.config.width/2 + 120, game.config.height/2 - 70, 'plane_hbounds').setOrigin(0,0).setScale(2.475,49).setAlpha(0);
+            this.physics.add.collider(this.tableBound, this.player);
+            this.tableBound.body.immovable = true;
+        }
 
         // OBJECTS
+        this.board = new Interactable(this, game.config.width - 100, 115, 'plane_hbounds', boardDialogue, 'blank').setAlpha(0);
+        this.chart = new Interactable(this, game.config.width + 330, game.config.height - 75, 'chart', chartDialogue, 'blank');
 
         // CHARACTERS
+        this.muffley = new Interactable(this, game.config.width + 550, game.config.height + 250, 'muffley', muffleyDialogue, 'muffley_head').setFlipX(true);
+        this.muffley.body.setSize(12, 5);
+        this.muffley.body.setOffset(0, 23);
+
+        this.turgidson = new Interactable(this, game.config.width + 350, game.config.height + 250, 'turgidson', turgidsonDialogue, 'turgidson_head').setFlipX(true);
+        this.turgidson.body.setSize(12, 5);
+        this.turgidson.body.setOffset(0, 23);
+
+        this.alexei = new Interactable(this, game.config.width + 200, game.config.height + 75, 'alexei', alexeiDialogue, 'alexei_head');
+        this.alexei.body.setSize(12, 5);
+        this.alexei.body.setOffset(0, 23);
+
+        this.official1 = new Interactable(this, game.config.width + 400, game.config.height - 200, 'official', officialDialogue, 'official_head');
+        this.official2 = new Interactable(this, game.config.width*2 - 250, game.config.height - 100, 'official', officialDialogue, 'official_head').setFlipX(true);
+        this.official3 = new Interactable(this, game.config.width*2 - 275, game.config.height + 100, 'official', officialDialogue, 'official_head').setFlipX(true);
+        this.official4 = new Interactable(this, game.config.width + 275, game.config.height + 25, 'official', officialDialogue, 'official_head');
+        //this.official.body.setSize(12, 5);
+        //this.official.body.setOffset(0, 23);
+
 
         // DIALOGUE BOX UI
         this.dialogueBox = this.add.sprite(30, 30, 'dialogue_box').setOrigin(0,0).setScale(1,0).setDepth(2);
@@ -94,6 +191,27 @@ class Level3 extends Phaser.Scene {
         if (!this.ending && !this.paused) {
             // UPDATE PLAYER
             this.player.update();
+            this.checkDepth(this.muffley);
+            this.checkDepth(this.alexei);
+            this.checkDepth(this.turgidson);
+
+            this.board.update();
+            this.chart.update();
+
+            this.muffley.update();
+            this.turgidson.update();
+            this.alexei.update();
+            this.official1.update();
+        }
+    }
+
+    checkDepth(char) {
+        if (this.player.y < char.y) {
+            //this.player.setDepth(1);
+            char.setDepth(3);
+        } else {
+            //this.player.setDepth(2);
+            char.setDepth(1);
         }
     }
 
