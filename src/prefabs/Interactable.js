@@ -35,6 +35,7 @@ class Interactable extends Phaser.Physics.Arcade.Sprite {
 
     update() {
         this.interactRadius.x = this.x;
+        this.interactRadius.y = this.y;
 
         // CHECK IF PLAYER IS WITHIN INTERACTION RADIUS
         if (this.scene.physics.world.overlap(this.scene.player, this.interactRadius)) {

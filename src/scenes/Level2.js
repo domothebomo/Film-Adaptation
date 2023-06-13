@@ -31,6 +31,7 @@ class Level2 extends Phaser.Scene {
         this.load.image('mandrake', './sprites/mandrake.png');
         this.load.image('mandrake_head', './sprites/mandrake_head.png');
         this.load.image('guano', './sprites/guano.png');
+        this.load.image('guano_gun', './sprites/guano_gun.png');
         this.load.image('guano_head', './sprites/guano_head.png');
         this.load.image('blank', './sprites/blank.png');
         this.load.image('soldier', './sprites/soldier.png');
@@ -42,6 +43,9 @@ class Level2 extends Phaser.Scene {
 
         // audio
         this.load.audio('walk2', './audio/walk2.mp3'); // https://pixabay.com/sound-effects/concrete-footsteps-6752/
+        this.load.audio('gunshot', './audio/gunshot.mp3'); // https://pixabay.com/sound-effects/single-gunshot-62-hp-37188/
+        this.load.audio('equip_gun', './audio/equip_gun.mp3'); // https://pixabay.com/sound-effects/gun-chamber-round-96258/
+        this.load.audio('open_door', './audio/open_door.mp3'); // https://pixabay.com/sound-effects/dorm-door-opening-6038/
     }
 
     create() {
@@ -85,6 +89,15 @@ class Level2 extends Phaser.Scene {
             this.blip = this.sound.add("blip", {
                 volume: 0.1,
             });
+            this.gunshot = this.sound.add("gunshot", {
+                volume: 0.1,
+            });
+            this.equip = this.sound.add("equip_gun", {
+                volume: 0.1,
+            });
+            this.openDoor = this.sound.add("open_door", {
+                volume: 0.1,
+            });
         }
 
         let couchDialogue = [];
@@ -92,6 +105,7 @@ class Level2 extends Phaser.Scene {
         let bathroomDialogue = [];
         let phone1Dialogue = [];
         let phone2Dialogue = [];
+        let doorDialogue = [];
         let notesDialogue = [];
         let guanoDialogue = [];
         let soldierDialogue = [];
@@ -112,6 +126,7 @@ class Level2 extends Phaser.Scene {
                 onCompletion: () => {}
             }));
 
+            // GUNRACK
             gunrackDialogue.push(new Dialogue(this, {
                 text: [
                         `*The General has quite a few vintage weapons on display...*`,
@@ -124,6 +139,7 @@ class Level2 extends Phaser.Scene {
                 onCompletion: () => {}
             }));
 
+            // BATHROOM
             bathroomDialogue.push(new Dialogue(this, {
                 text: [
                         `*The door won't budge, somethings blocking it*`,
@@ -136,6 +152,7 @@ class Level2 extends Phaser.Scene {
                 onCompletion: () => {}
             }));
 
+            // PHONE 1
             phone1Dialogue.push(new Dialogue(this, {
                 text: [
                         `*The General's red phone*`,
@@ -146,7 +163,20 @@ class Level2 extends Phaser.Scene {
                 unlocked: true,
                 onCompletion: () => {}
             }));
+            phone1Dialogue.push(new Dialogue(this, {
+                text: [
+                        `*The General's red phone*`,
+                        `*You pick up the phone to call SAC...*`,
+                        `*The phone has no signal. It seems fried*`,
+                        `Blast. Blast. Shot away, I expect by one of your men during this ridiculous fighting!`                  
+                      ],
+                speaker: [` `, ` `, ` `, `Mandrake`],
+                response: null,
+                unlocked: false,
+                onCompletion: () => {}
+            }));
 
+            // PHONE 2
             phone2Dialogue.push(new Dialogue(this, {
                 text: [
                         `*Another phone, this one lying on its side*`,
@@ -157,17 +187,134 @@ class Level2 extends Phaser.Scene {
                 unlocked: true,
                 onCompletion: () => {}
             }));
+            phone2Dialogue.push(new Dialogue(this, {
+                text: [
+                        `*Another phone, this one lying on its side*`,
+                        `*You pick up the phone to call SAC...*`,
+                        `*But the phone has no wire!*`                  
+                      ],
+                speaker: [` `, ` `, ` `],
+                response: null,
+                unlocked: false,
+                onCompletion: () => {}
+            }));
 
+            // DOOR
+            doorDialogue.push(new Dialogue(this, {
+                text: [
+                        `*I musn't leave until I find the code*`                 
+                      ],
+                speaker: [`Mandrake`],
+                response: null,
+                unlocked: true,
+                onCompletion: () => {}
+            }));
+
+            // NOTES
             notesDialogue.push(new Dialogue(this, {
                 text: [
                         `*A handful of General Ripper's notes*`,
                         `*He seems to have scribbled the same couple of phrases over and over again, in crossword-like patterns*`,
-                        `Peace on Earth... P.O.E... Purity of Essence... O.P.O.E...`                 
+                        `Peace on Earth... P.O.E... Purity of Essence... O.P.O.E...`,
+                        `*Could this be the code?*`                 
                       ],
                 speaker: [` `, ` `, `Mandrake`],
                 response: null,
                 unlocked: true,
+                onCompletion: () => {
+                    this.paused = true;
+                    this.officeDoor.destroy();
+                    this.officeDoor = undefined;
+                    this.gunshot.play();
+                    this.openDoor.play();
+                    this.guano.setVelocity(-200, 0);
+                    this.guano.play('guano_walk');
+                    this.walk.play();
+                    this.time.addEvent({
+                        callback: () => {
+                            this.paused = false;
+                            this.walk.stop();
+                            this.guano.setVelocity(0,0);
+                            this.guano.anims.stop();
+                            this.guano.setTexture('guano_gun');
+                            //this.guano.setFlipX(true);
+                            this.guano.interactWith();
+                        },
+                        repeat: 0,
+                        delay: 1250
+                    })
+                }
+            }));
+            notesDialogue.push(new Dialogue(this, {
+                text: [
+                        `Peace on Earth... P.O.E... Purity of Essence... O.P.O.E...`                 
+                      ],
+                speaker: [`Mandrake`],
+                response: null,
+                unlocked: true,
                 onCompletion: () => {}
+            }));
+
+            guanoDialogue.push(new Dialogue(this, {
+                text: [
+                        `Put your hands over your head.`,
+                        `What the devil do you think you're doing, shooting your way in here? Who are you?`,
+                        `I said put your hands over your head.`,
+                        `What kinda suit d'you call that, fella?`,
+                        `...What do you mean, suit? This happens to be an R.A.F. uniform, sir, and I am Group-Captain Lionel Mandrake. I'm General Ripper's executive officer.`,
+                        `Where's General Ripper?`,
+                        `He's dead. In the bathroom.`,
+                        `Where's the bathroom?`,
+                        `Next to you.`                 
+                      ],
+                speaker: [`Soldier`, `Mandrake`, `Soldier`, `Soldier`, `Mandrake`, `Soldier`, `Mandrake`, `Soldier`, `Mandrake`],
+                response: null,
+                unlocked: true,
+                onCompletion: () => {
+                    this.paused = true;
+                    this.guano.setVelocity(0, 200);
+                    this.guano.play('guano_walk');
+                    this.walk.play();
+                    this.time.addEvent({
+                        callback: () => {
+                            this.paused = false;
+                            this.walk.stop();
+                            this.guano.setVelocity(0,0);
+                            this.guano.anims.stop();
+                            this.guano.setTexture('guano_gun');
+                            this.guano.interactWith();
+                        },
+                        repeat: 0,
+                        delay: 1200
+                    })
+                }
+            }));
+            guanoDialogue.push(new Dialogue(this, {
+                text: [
+                        `*The soldier peers into the bathroom*`,
+                        `Look I don't know what sort of stupid game this is you're playing, but I've got a very good idea what the recall code is and I have to get in touch with SAC headquarters immediately!`,
+                        `I said put your hands over your head and keep 'em there. Go on!`,
+                        `Got any witnesses?`,
+                        `Witnesses!? What are you talking about, witnesses? He shot himself!`,
+                        `While he was shavin', huh?`,
+                        `Now look, Colonel... "Bat Guano"... if that really is your name...May I tell you that I have a very very good idea--I think, I hope, I pray--what the recall code is.`,
+                        `It's some sort of recurrent theme he kept repeating, it's a variation on "Peace on Earth" or "Purity of Essence, E.O.P., O.P.E., it's one of those!"`,
+                        `Put your hands up on top of your head. Start walkin'.`,
+                        `Don't you know that General Ripper went as mad as a bloody march hare and sent the whole Wing to attack the Soviets, don't you know that!?`,
+                        `...What are you talkin' about?`,
+                        `I'll tell you what I'm talking about. I just need a telephone that's connected to SAC...`                
+                      ],
+                speaker: [` `, `Mandrake`, `Soldier`, `Soldier`, `Mandrake`, `Soldier`, `Mandrake`, `Mandrake`, `Colonel Guano`, `Mandrake`, `Colonel Guano`, `Mandrake`],
+                response: null,
+                unlocked: true,
+                onCompletion: () => {
+                    this.phone1.dialogues[1].dialogue.unlocked = true;
+                    this.phone1.dialoguesCompleted = 1;
+                    this.phone2.dialogues[1].dialogue.unlocked = true;
+                    this.phone2.dialoguesCompleted = 1;
+                    this.shadow1.alpha = 0;
+                    this.shadow2.alpha = 0;
+                }
             }));
         }
 
@@ -175,6 +322,7 @@ class Level2 extends Phaser.Scene {
         this.player = new Player(this, game.config.width - 250, game.config.height - 110, 'mandrake').setDepth(1).setScale(4,4);   
         this.speakingTo = null;
         this.ending = false;
+        this.paused = false;
 
         // BOUNDS
         {
@@ -240,7 +388,7 @@ class Level2 extends Phaser.Scene {
             this.bound14.body.immovable = true;
         }
 
-        //this.officeDoor = new Interactable(this, game.config.width + 15, game.config.height - 225, 'door');
+        this.officeDoor = new Interactable(this, game.config.width + 15, game.config.height - 225, 'door', doorDialogue, 'blank');
         this.notes = new Interactable(this, game.config.width - 457, game.config.height - 140, 'notes', notesDialogue, 'blank');
         this.phone1 = new Interactable(this, game.config.width - 457, game.config.height - 200, 'phone1', phone1Dialogue, 'blank');
         this.phone2 = new Interactable(this, game.config.width - 457, game.config.height - 100, 'phone2', phone2Dialogue, 'blank');
@@ -250,15 +398,15 @@ class Level2 extends Phaser.Scene {
         this.vendingMachine = new Interactable(this, game.config.width -100, game.config.height + 390, 'vending_machine');
         this.phonebooth = new Interactable(this, game.config.width +350, game.config.height + 390, 'phonebooth');
 
-        this.guano = new Interactable(this, game.config.width + 150, game.config.height - 250, 'guano').setFlipX(true);
+        this.guano = new Interactable(this, game.config.width + 150, game.config.height - 250, 'guano', guanoDialogue, 'guano_head').setFlipX(true);
         this.guano.body.setSize(12, 5);
         this.guano.body.setOffset(0, 23);
         this.soldier1 = new Interactable(this, game.config.width + 75, game.config.height - 350, 'soldier');
         this.soldier2 = new Interactable(this, game.config.width + 150, game.config.height - 360, 'soldier').setFlipX(true);
         this.soldier3 = new Interactable(this, game.config.width + 225, game.config.height - 340, 'soldier').setFlipX(true);
 
-        //this.shadow1 = this.add.rectangle(0,0, game.config.width*4, game.config.height, '#000000', 1);
-        //this.shadow2 = this.add.rectangle(game.config.width + 505,0, game.config.width, game.config.height*4, '#000000', 1);
+        this.shadow1 = this.add.rectangle(0,0, game.config.width*4, game.config.height, '#000000', 1).setDepth(2);
+        this.shadow2 = this.add.rectangle(game.config.width + 505,0, game.config.width, game.config.height*4, '#000000', 1).setDepth(2);
 
         // DIALOGUE BOX UI
         this.dialogueBox = this.add.sprite(30, 30, 'dialogue_box').setOrigin(0,0).setScale(1,0).setDepth(2);
@@ -280,11 +428,15 @@ class Level2 extends Phaser.Scene {
 
     update() {
 
-        if (!this.ending) {
+        if (!this.ending && !this.paused) {
             // UPDATE PLAYER
             this.player.update();
+            this.checkDepth();
 
             // UPDATE INTERACTABLE OBJECTS/CHARS
+            if (this.officeDoor) {
+                this.officeDoor.update();
+            }
             this.notes.update();
             this.phone1.update();
             this.phone2.update();
@@ -299,5 +451,15 @@ class Level2 extends Phaser.Scene {
             this.soldier3.update();
         }
 
+    }
+
+    checkDepth() {
+        if (this.player.y < this.guano.y) {
+            this.player.setDepth(1);
+            this.guano.setDepth(2);
+        } else {
+            this.player.setDepth(2);
+            this.guano.setDepth(1);
+        }
     }
 }
