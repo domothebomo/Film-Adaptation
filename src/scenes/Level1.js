@@ -43,7 +43,6 @@ class Level1 extends Phaser.Scene {
         // AUDIO
         this.load.audio('music', './audio/hummm.mp3');
         this.load.audio('ambience', './audio/plane_ambience.wav'); // https://freesound.org/s/584597/
-        //this.load.audio('blip', './audio/blip4.wav'); // https://freesound.org/people/SoftDistortionFX/sounds/398937/
         this.load.audio('walk', './audio/walk.wav');
         
     }
@@ -252,8 +251,6 @@ class Level1 extends Phaser.Scene {
                 response: null,
                 unlocked: false,
                 onCompletion: () => {
-                    //this.radio.dialogues[2].dialogue.unlocked = true;
-                    //this.radio.dialoguesCompleted = 2;
                     this.kong.setVelocity(200, 0);
                     this.kong.anims.play('kong_walk');
                     this.time.addEvent({

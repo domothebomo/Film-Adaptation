@@ -41,6 +41,8 @@ class Level3 extends Phaser.Scene {
         // AUDIO
         this.load.audio('slide', './audio/slide3.wav'); // https://pixabay.com/sound-effects/sliding-noise-v2-83483/
         this.load.audio('walk', './audio/walk2.mp3');
+        this.load.audio('end_music', './audio/wellmeetagain.mp3');
+        this.load.audio('rumble', './audio/rumble.wav');
     }
 
     create() {
@@ -84,6 +86,12 @@ class Level3 extends Phaser.Scene {
                 loop: true
             });
             this.blip = this.sound.add("blip", {
+                volume: 0.1,
+            });
+            this.rumble = this.sound.add("rumble", {
+                volume: 0.4,
+            });
+            endMusic = this.sound.add("end_music", {
                 volume: 0.1,
             });
         }
@@ -255,10 +263,12 @@ class Level3 extends Phaser.Scene {
                             //this.player.play('strangelove_stand');
                             //this.player.setTexture('strangelove');
                             this.player.play('strangelove_stand');
+                            this.walk2.play();
                             this.player.on('animationcomplete', () => {
+                                this.walk2.stop();
                                 this.paused = false;
-                                this.chart.dialogues[4].dialogue.unlocked = true;
-                                this.chart.dialoguesCompleted = 4;
+                                this.muffley.dialogues[4].dialogue.unlocked = true;
+                                this.muffley.dialoguesCompleted = 4;
                                 this.muffley.interactWith();
                             });
                         },
@@ -342,10 +352,26 @@ class Level3 extends Phaser.Scene {
                 response: null,
                 unlocked: false,
                 onCompletion: () => {
-
+                    endMusic.play();
+                    this.rumble.play();
+                    this.ending = true;
+                    this.transitionScreen = this.add.rectangle(0,0, game.config.width*4, game.config.height*4, '0xFFFFFF', 1).setDepth(4);
+                    this.tweens.add({
+                        targets: this.transitionScreen,
+                        alpha: {from: 0, to: 1},
+                        duration: 10000,
+                        onComplete: () => {
+                            //this.music.loop = false;
+                            //this.ambience.stop();
+                            level += 1;
+                            this.scene.start('transitionScene');
+                        }
+                    });
                 }
             }));
         }
+
+        //this.transitionScreen = this.add.rectangle(0,0, game.config.width*4, game.config.height*4, '0xFFFFFF', 1).setDepth(4);
 
 
         // PLAYER CLASS

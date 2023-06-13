@@ -78,6 +78,7 @@ class Title extends Phaser.Scene {
     // CREDITS TEXT
     //this.UIConfig.color = '#FFFFFF';
     //this.creditsText = this.add.text(game.config.width / 2, game.config.height / 2 + 160, 'created by Dominic Fanaris', this.UIConfig).setOrigin(0.5,0.5);
+    level = 0;
 
   }
 
