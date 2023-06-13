@@ -33,6 +33,8 @@ class Level2 extends Phaser.Scene {
         this.load.image('guano', './sprites/guano.png');
         this.load.image('guano_head', './sprites/guano_head.png');
         this.load.image('blank', './sprites/blank.png');
+        this.load.image('soldier', './sprites/soldier.png');
+        this.load.image('soldier_head', './sprites/soldier_head.png');
 
         // SPRITESHEETS
         this.load.spritesheet('mandrake_walk', './sprites/mandrake_walk.png', {frameWidth: 12, frameHeight: 28, startFrame: 0, endFrame: 1});
@@ -80,10 +82,97 @@ class Level2 extends Phaser.Scene {
                 volume: 0.2,
                 loop: true
             });
+            this.blip = this.sound.add("blip", {
+                volume: 0.1,
+            });
+        }
+
+        let couchDialogue = [];
+        let gunrackDialogue = [];
+        let bathroomDialogue = [];
+        let phone1Dialogue = [];
+        let phone2Dialogue = [];
+        let notesDialogue = [];
+        let guanoDialogue = [];
+        let soldierDialogue = [];
+        let vendingMachineDialogue = [];
+        let phoneboothDialogue = [];
+        // DIALOGUE
+        {
+            // COUCH
+            couchDialogue.push(new Dialogue(this, {
+                text: [
+                        `*This couch was pushed towards the window earlier for cover. It's covered in bullet holes and cotton spillings*`,
+                        `*You flip the cushions and dig in the corners, looking for anything*`,
+                        `*...Nothing...*`                    
+                      ],
+                speaker: [` `, ` `, `Mandrake`],
+                response: null,
+                unlocked: true,
+                onCompletion: () => {}
+            }));
+
+            gunrackDialogue.push(new Dialogue(this, {
+                text: [
+                        `*The General has quite a few vintage weapons on display...*`,
+                        `*The serial numbers seem tampered with, perhaps they hold a clue?*`,
+                        `*...On closer inspection, it seems they've simply been filed down poorly.*`                    
+                      ],
+                speaker: [` `, `Mandrake`, ` `],
+                response: null,
+                unlocked: true,
+                onCompletion: () => {}
+            }));
+
+            bathroomDialogue.push(new Dialogue(this, {
+                text: [
+                        `*The door won't budge, somethings blocking it*`,
+                        `*At the edge of the light provided by the doorway, you see blood pooling...*`,
+                        `*Simply terrible, how this ended up*`                    
+                      ],
+                speaker: [` `, ` `, `Mandrake`],
+                response: null,
+                unlocked: true,
+                onCompletion: () => {}
+            }));
+
+            phone1Dialogue.push(new Dialogue(this, {
+                text: [
+                        `*The General's red phone*`,
+                        `*Nothing interesting about it*`                  
+                      ],
+                speaker: [` `, `Mandrake`],
+                response: null,
+                unlocked: true,
+                onCompletion: () => {}
+            }));
+
+            phone2Dialogue.push(new Dialogue(this, {
+                text: [
+                        `*Another phone, this one lying on its side*`,
+                        `*Guess you never know when you need two phones...*`                  
+                      ],
+                speaker: [` `, `Mandrake`],
+                response: null,
+                unlocked: true,
+                onCompletion: () => {}
+            }));
+
+            notesDialogue.push(new Dialogue(this, {
+                text: [
+                        `*A handful of General Ripper's notes*`,
+                        `*He seems to have scribbled the same couple of phrases over and over again, in crossword-like patterns*`,
+                        `Peace on Earth... P.O.E... Purity of Essence... O.P.O.E...`                 
+                      ],
+                speaker: [` `, ` `, `Mandrake`],
+                response: null,
+                unlocked: true,
+                onCompletion: () => {}
+            }));
         }
 
         // PLAYER CLASS
-        this.player = new Player(this, game.config.width - 250, game.config.height - 100, 'mandrake').setDepth(1).setScale(4,4);   
+        this.player = new Player(this, game.config.width - 250, game.config.height - 110, 'mandrake').setDepth(1).setScale(4,4);   
         this.speakingTo = null;
         this.ending = false;
 
@@ -152,18 +241,21 @@ class Level2 extends Phaser.Scene {
         }
 
         //this.officeDoor = new Interactable(this, game.config.width + 15, game.config.height - 225, 'door');
-        this.notes = new Interactable(this, game.config.width - 457, game.config.height - 140, 'notes');
-        this.phone1 = new Interactable(this, game.config.width - 457, game.config.height - 200, 'phone1');
-        this.phone1 = new Interactable(this, game.config.width - 457, game.config.height - 100, 'phone2');
-        this.couch = new Interactable(this, game.config.width -250, game.config.height, 'couch');
-        this.bathroom = new Interactable(this, game.config.width - 70, game.config.height + 90, 'couch').setAlpha(0);
-        this.gunrack = new Interactable(this, game.config.width -200, game.config.height - 290, 'gunrack');
+        this.notes = new Interactable(this, game.config.width - 457, game.config.height - 140, 'notes', notesDialogue, 'blank');
+        this.phone1 = new Interactable(this, game.config.width - 457, game.config.height - 200, 'phone1', phone1Dialogue, 'blank');
+        this.phone2 = new Interactable(this, game.config.width - 457, game.config.height - 100, 'phone2', phone2Dialogue, 'blank');
+        this.couch = new Interactable(this, game.config.width -250, game.config.height, 'couch', couchDialogue, 'blank');
+        this.bathroom = new Interactable(this, game.config.width - 70, game.config.height + 90, 'couch', bathroomDialogue, 'blank').setAlpha(0);
+        this.gunrack = new Interactable(this, game.config.width -200, game.config.height - 290, 'gunrack', gunrackDialogue, 'blank');
         this.vendingMachine = new Interactable(this, game.config.width -100, game.config.height + 390, 'vending_machine');
         this.phonebooth = new Interactable(this, game.config.width +350, game.config.height + 390, 'phonebooth');
 
         this.guano = new Interactable(this, game.config.width + 150, game.config.height - 250, 'guano').setFlipX(true);
         this.guano.body.setSize(12, 5);
         this.guano.body.setOffset(0, 23);
+        this.soldier1 = new Interactable(this, game.config.width + 75, game.config.height - 350, 'soldier');
+        this.soldier2 = new Interactable(this, game.config.width + 150, game.config.height - 360, 'soldier').setFlipX(true);
+        this.soldier3 = new Interactable(this, game.config.width + 225, game.config.height - 340, 'soldier').setFlipX(true);
 
         //this.shadow1 = this.add.rectangle(0,0, game.config.width*4, game.config.height, '#000000', 1);
         //this.shadow2 = this.add.rectangle(game.config.width + 505,0, game.config.width, game.config.height*4, '#000000', 1);
@@ -191,6 +283,20 @@ class Level2 extends Phaser.Scene {
         if (!this.ending) {
             // UPDATE PLAYER
             this.player.update();
+
+            // UPDATE INTERACTABLE OBJECTS/CHARS
+            this.notes.update();
+            this.phone1.update();
+            this.phone2.update();
+            this.couch.update();
+            this.bathroom.update();
+            this.gunrack.update();
+            this.vendingMachine.update();
+            this.phonebooth.update();
+            this.guano.update()
+            this.soldier1.update();
+            this.soldier2.update();
+            this.soldier3.update();
         }
 
     }
