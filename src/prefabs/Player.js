@@ -45,14 +45,16 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         }
         // MOVEMENT ANIMATIONS
         if (this.direction.x != 0 || this.direction.y != 0) {
-            this.play('pilot_walk', true);
+            this.handleAnim();
+            //this.play('player_walk', true);
             if (!this.walking) {
                 this.scene.walk.play();
                 this.walking = true;
             }
         } else {
             this.anims.stop();
-            this.setTexture('pilot');
+            this.handleTexture()
+            //this.setTexture('player');
             if (this.walking) {
                 this.scene.walk.stop();
                 this.walking = false;
@@ -60,6 +62,27 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         }
         this.setVelocity(this.moveSpeed * this.direction.x, this.moveSpeed * this.direction.y);
 
+    }
+
+    handleAnim() {
+        switch (level) {
+            case 0:
+                this.play('pilot_walk', true);
+                break;
+            case 1:
+                this.play('mandrake_walk', true);
+                break;
+        }
+    }
+    handleTexture() {
+        switch (level) {
+            case 0:
+                this.setTexture('pilot');
+                break;
+            case 1:
+                this.setTexture('mandrake');
+                break;
+        }
     }
 
 }

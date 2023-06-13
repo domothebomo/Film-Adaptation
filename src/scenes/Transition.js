@@ -34,8 +34,8 @@ class Transition extends Phaser.Scene {
         if (Phaser.Input.Keyboard.JustDown(keySPACE)) {
             if (level == 0) {
                 this.scene.start('level1Scene');
-            } else {
-
+            } else if (level == 1) {
+                this.scene.start('level2Scene');
             }
         }
     }

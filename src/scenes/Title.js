@@ -43,7 +43,7 @@ class Title extends Phaser.Scene {
       useHandCursor: true
     });
     this.playButton.on('pointerdown', () => {
-      level = 1;
+      level = 0;
       //this.scene.start('level1Scene');
       this.scene.start('transitionScene');
     });
@@ -56,6 +56,8 @@ class Title extends Phaser.Scene {
       useHandCursor: true
     });
     this.modeButton.on('pointerdown', () => {
+      level = 1;
+      this.scene.start('transitionScene');
       console.log('Coming soon!');
     });
 
