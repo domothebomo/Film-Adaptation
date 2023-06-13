@@ -56,7 +56,7 @@ class Title extends Phaser.Scene {
       useHandCursor: true
     });
     this.modeButton.on('pointerdown', () => {
-      level = 1;
+      level = 2;
       this.scene.start('transitionScene');
       console.log('Coming soon!');
     });

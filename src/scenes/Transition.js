@@ -36,6 +36,10 @@ class Transition extends Phaser.Scene {
                 this.scene.start('level1Scene');
             } else if (level == 1) {
                 this.scene.start('level2Scene');
+            } else if (level == 2) {
+                this.scene.start('level3Scene');
+            } else {
+                this.scene.start('titleScene');
             }
         }
     }

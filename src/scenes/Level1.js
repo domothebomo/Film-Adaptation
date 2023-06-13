@@ -348,6 +348,7 @@ class Level1 extends Phaser.Scene {
                         duration: 5000,
                         onComplete: () => {
                             this.music.loop = false;
+                            this.ambience.stop();
                             level += 1;
                             this.scene.start('transitionScene');
                         }

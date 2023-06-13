@@ -41,7 +41,7 @@ class Level2 extends Phaser.Scene {
         this.load.spritesheet('mandrake_walk', './sprites/mandrake_walk.png', {frameWidth: 12, frameHeight: 28, startFrame: 0, endFrame: 1});
         this.load.spritesheet('guano_walk', './sprites/guano_walk.png', {frameWidth: 12, frameHeight: 28, startFrame: 0, endFrame: 1});
 
-        // audio
+        // AUDIO
         this.load.audio('walk2', './audio/walk2.mp3'); // https://pixabay.com/sound-effects/concrete-footsteps-6752/
         this.load.audio('gunshot', './audio/gunshot.mp3'); // https://pixabay.com/sound-effects/single-gunshot-62-hp-37188/
         this.load.audio('equip_gun', './audio/equip_gun.mp3'); // https://pixabay.com/sound-effects/gun-chamber-round-96258/
@@ -557,6 +557,7 @@ class Level2 extends Phaser.Scene {
             this.bound14.body.immovable = true;
         }
 
+        // OBJECTS
         this.officeDoor = new Interactable(this, game.config.width + 15, game.config.height - 225, 'door', doorDialogue, 'blank');
         this.notes = new Interactable(this, game.config.width - 457, game.config.height - 140, 'notes', notesDialogue, 'blank');
         this.phone1 = new Interactable(this, game.config.width - 457, game.config.height - 200, 'phone1', phone1Dialogue, 'blank');
@@ -567,6 +568,7 @@ class Level2 extends Phaser.Scene {
         this.vendingMachine = new Interactable(this, game.config.width -100, game.config.height + 390, 'vending_machine', vendingMachineDialogue, 'blank');
         this.phonebooth = new Interactable(this, game.config.width +350, game.config.height + 390, 'phonebooth', phoneboothDialogue, 'blank');
 
+        // CHARACTERS
         this.guano = new Interactable(this, game.config.width + 150, game.config.height - 250, 'guano', guanoDialogue, 'guano_head').setFlipX(true);
         this.guano.body.setSize(12, 5);
         this.guano.body.setOffset(0, 23);
@@ -574,6 +576,7 @@ class Level2 extends Phaser.Scene {
         this.soldier2 = new Interactable(this, game.config.width + 150, game.config.height - 360, 'soldier', soldierDialogue, 'soldier_head').setFlipX(true);
         this.soldier3 = new Interactable(this, game.config.width + 225, game.config.height - 340, 'soldier', soldierDialogue, 'soldier_head').setFlipX(true);
 
+        // FOG OF WAR
         this.shadow1 = this.add.rectangle(0,0, game.config.width*4, game.config.height, '#000000', 1).setDepth(2);
         this.shadow2 = this.add.rectangle(game.config.width + 505,0, game.config.width, game.config.height*4, '#000000', 1).setDepth(2);
 
