@@ -8,21 +8,27 @@ class Level1 extends Phaser.Scene {
         this.load.path = './assets/';
 
         // SPRITES
-        this.load.image('plane', './sprites/plane.png');
-        this.load.image('dialogue_box', './sprites/dialogue_box.png');
 
+        // PLANE
+        this.load.image('plane', './sprites/plane.png');
         this.load.image('plane_hbounds', './sprites/plane_hbounds.png');
         this.load.image('plane_vbounds', './sprites/plane_vbounds.png');
 
-        this.load.image('pilot', './sprites/pilot.png');
-        this.load.image('pilot_head', './sprites/pilot_head.png');
+        // UI
+        this.load.image('dialogue_box', './sprites/dialogue_box.png');
+        this.load.image('radio_tip', './sprites/radio_tip.png');
 
+        // INTERACTABLE
         this.load.image('radio', './sprites/radio.png');
         this.load.image('codebook', './sprites/codebook.png');
         this.load.image('cockpit', './sprites/cockpit.png');
         this.load.image('kong', './sprites/kong.png');
+
+        // CHARACTERS
         this.load.image('kong_hat', './sprites/kong_hat.png');
         this.load.image('kong_head', './sprites/kong_head.png');
+        this.load.image('pilot', './sprites/pilot.png');
+        this.load.image('pilot_head', './sprites/pilot_head.png');
 
         // SPRITESHEETS
         this.load.spritesheet('pilot_walk', './sprites/pilot_walk.png', {frameWidth: 12, frameHeight: 28, startFrame: 0, endFrame: 1});
@@ -44,10 +50,12 @@ class Level1 extends Phaser.Scene {
         // CONTROLS
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
+        keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
+
 
         // PLAYER CLASS
         this.player = new Player(this, game.config.width + 200, game.config.height + 25, 'pilot').setDepth(1).setScale(4,4);   
-
+        this.speakingTo = null;
         this.ending = false;
 
         // PLANE BOUNDS
@@ -230,21 +238,27 @@ class Level1 extends Phaser.Scene {
         }
 
         // DIALOGUE BOX UI
-        this.dialogueBox = this.add.sprite(30, 30, 'dialogue_box').setOrigin(0,0).setScale(1,0).setDepth(1);
+        this.dialogueBox = this.add.sprite(30, 30, 'dialogue_box').setOrigin(0,0).setScale(1,0).setDepth(2);
         this.dialogueBox.setScrollFactor(0);
-        this.dialogueText = this.add.text(198, 66, '', {fontSize: '20px'}).setOrigin(0,0).setWordWrapWidth(600).setAlign('left').setDepth(1);
+        this.speakerText = this.add.text(198, 41, 'Major Kong', {fontSize: '18px', fontFamily: 'Verdana', fontStyle: 'bold'}).setOrigin(0,0).setAlign('left').setDepth(2);
+        this.speakerText.setScrollFactor(0);
+        this.dialogueText = this.add.text(198, 66, '', {fontSize: '18px', fontFamily: 'Verdana'}).setOrigin(0,0).setWordWrapWidth(600).setAlign('left').setDepth(2);
         this.dialogueText.setScrollFactor(0);
-        this.objectProfile = this.add.sprite(66, 66, 'radio').setOrigin(0,0).setScale(4,0).setDepth(1);
+        this.objectProfile = this.add.sprite(66, 66, 'radio').setOrigin(0,0).setScale(4,0).setDepth(2);
         this.objectProfile.setScrollFactor(0);
-        this.playerProfile = this.add.sprite(game.config.width - 66 - 96, 66, 'pilot_head').setOrigin(0,0).setScale(4,0).setDepth(1);
+        this.playerProfile = this.add.sprite(game.config.width - 66 - 96, 66, 'pilot_head').setOrigin(0,0).setScale(4,0).setDepth(2);
         this.playerProfile.setScrollFactor(0);
 
         // OTHER UI
         this.exitTip = this.add.text(620, 610, 'Press ESC to exit to main menu', {color: '#000000', fontSize: '18px'}).setDepth(2);
         this.exitTip.setScrollFactor(0);
 
-        this.controlsTip = this.add.text(10, 10, 'Arrow keys to move, SPACE to interact with objects and progress dialogue', {color: '#000000', fontSize: '18px'}).setDepth(2);
-        this.controlsTip.setScrollFactor(0);
+        //this.controlsTip = this.add.text(10, 10, 'Arrow keys to move, SPACE to interact with objects and progress dialogue', {color: '#000000', fontSize: '18px'}).setDepth(2);
+        //this.controlsTip.setScrollFactor(0);
+
+        this.radioTip = this.add.sprite(10, -4, 'radio_tip').setDepth(1).setOrigin(0,0).setScale(4,4);
+        this.radioTip.setScrollFactor(0);
+        this.radioTip.open = true;
 
         // INTERACTABLE OBJECTS + CHARACTERS
         this.radio = new Interactable(this, game.config.width + 390, game.config.height - 30, 'radio', radioDialogue);
@@ -285,6 +299,20 @@ class Level1 extends Phaser.Scene {
             this.codebook.update();
             this.cockpit.update();
             this.kong.update();
+
+            if (Phaser.Input.Keyboard.JustDown(keyR)) {
+                this.activateRadio();
+            }
+            if (this.speakingTo === null && this.radioTip.open == false) {
+                this.radioTip.open = true;
+                this.tweens.add({
+                    targets: [this.radioTip],
+                    duration: 100,
+                    scaleY: {from: 0, to: 4},
+                    ease: 'Linear'
+                });
+            }
+    
         }
 
         if (Phaser.Input.Keyboard.JustDown(keyESC)) {
@@ -293,6 +321,20 @@ class Level1 extends Phaser.Scene {
             this.scene.start('titleScene');
         }
 
+    }
+
+    activateRadio() {
+        if (this.speakingTo === null) {
+            this.kong.interactWith();
+            this.radioTip.open = false;
+            this.tweens.add({
+                targets: [this.radioTip],
+                duration: 100,
+                scaleY: {from: 4, to: 0},
+                ease: 'Linear'
+    
+            });
+        }
     }
 
 }

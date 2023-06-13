@@ -47,7 +47,9 @@ class Interactable extends Phaser.Physics.Arcade.Sprite {
         }
 
         // INITIATE DIALOGUE BETWEEN PLAYER AND THIS INTERACTABLE
-        if (this.near && Phaser.Input.Keyboard.JustDown(keySPACE)) {
+        if ((this.scene.speakingTo == this || this.scene.speakingTo === null) && this.near && Phaser.Input.Keyboard.JustDown(keySPACE)) {
+            this.interactWith();
+        } else if (this.scene.speakingTo == this && Phaser.Input.Keyboard.JustDown(keySPACE)) {
             this.interactWith();
         }
 
@@ -60,6 +62,7 @@ class Interactable extends Phaser.Physics.Arcade.Sprite {
 
         // BEGIN DIALOGUE
         if (!this.speaking) {
+            this.scene.speakingTo = this;
             this.speaking = true;
             this.scene.player.interacting = true;
             this.dialogues[this.dialoguesCompleted].beginDialogue();
@@ -72,6 +75,7 @@ class Interactable extends Phaser.Physics.Arcade.Sprite {
         // ENDING DIALOGUE
         } else {
             if (this.dialogues[this.dialoguesCompleted].endDialogue()) {
+                this.scene.speakingTo = null;
                 this.speaking = false;
                 this.scene.player.interacting = false;
                 if (this.dialoguesCompleted < this.dialogues.length - 1) {

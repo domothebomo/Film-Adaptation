@@ -17,10 +17,6 @@ class Title extends Phaser.Scene {
     this.background = this.add.tileSprite(0,0, game.config.width * 2, game.config.height * 2, 'background').setOrigin(0,0);     
     
 
-    // TITLE TEXT
-    this.titleText = this.add.text(game.config.width/2, game.config.height/2 - 150, 'Dr. Strangelove', {color: '#000000', fontSize: '40px'}).setAlign('center').setOrigin(0.5,0);
-    this.subtTitleText = this.add.text(game.config.width/2, game.config.height/2 - 100, 'or: How I Learned to Stop Worrying and Love the Bomb', {color: '#000000',fontSize: '25px'}).setAlign('center').setOrigin(0.5,0);
-
     // UI TEXT STYLE
     this.UIConfig = {
       color: '#000000',
@@ -29,8 +25,15 @@ class Title extends Phaser.Scene {
       align: 'center'
     };
 
+    // TITLE TEXT
+    this.UIConfig.fontSize = '40px';
+    this.titleText = this.add.text(game.config.width/2, game.config.height/2 - 150, 'Dr. Strangelove', this.UIConfig).setAlign('center').setOrigin(0.5,0);
+    this.UIConfig.fontSize = '25px';
+    this.subtTitleText = this.add.text(game.config.width/2, game.config.height/2 - 100, 'or: How I Learned to Stop Worrying and Love the Bomb', this.UIConfig).setAlign('center').setOrigin(0.5,0);
+
     // PLAY BUTTON
     
+    this.UIConfig.fontSize = '15px';
     this.playButton = this.add.rectangle(game.config.width / 2, game.config.height / 2, 200, 50, 0xbbbbbb);
     this.playButtonText = this.add.text(this.playButton.x, this.playButton.y, 'PLAY', this.UIConfig).setOrigin(0.5, 0.5);
     this.playButton.setInteractive({
