@@ -22,16 +22,18 @@ class Level1 extends Phaser.Scene {
         this.load.image('radio', './sprites/radio.png');
         this.load.image('codebook', './sprites/codebook.png');
         this.load.image('cockpit', './sprites/cockpit.png');
-        this.load.image('kong', './sprites/kong.png');
 
         // CHARACTERS
+        this.load.image('kong', './sprites/kong.png');
         this.load.image('kong_hat', './sprites/kong_hat.png');
         this.load.image('kong_head', './sprites/kong_head.png');
+        this.load.image('kong_hat_head', './sprites/kong_hat_head.png');
         this.load.image('pilot', './sprites/pilot.png');
         this.load.image('pilot_head', './sprites/pilot_head.png');
 
         // SPRITESHEETS
         this.load.spritesheet('pilot_walk', './sprites/pilot_walk.png', {frameWidth: 12, frameHeight: 28, startFrame: 0, endFrame: 1});
+        this.load.spritesheet('kong_walk', './sprites/kong_walk.png', {frameWidth: 12, frameHeight: 28, startFrame: 0, endFrame: 1});
 
         // AUDIO
         this.load.audio('music', './audio/hummm.mp3');
@@ -85,9 +87,10 @@ class Level1 extends Phaser.Scene {
             radioDialogue.push(new Dialogue(this, {
                 text: [
                         `BEEP BEEP BEEP BEEP BEEP BEEP`,
-                        `*The CRM-114 Discriminator is flashing a new code from command, 'FGD 135'*`                      
+                        `*The dials of the CRM 114 Discriminator display a new code from command*`,
+                        `| F | G | D | 1 | 3 | 5 |`                     
                       ],
-                speaker: ['CRM-114 Discriminator', ''],
+                speaker: ['CRM-114 Discriminator', ' ', 'CRM-114 Discriminator'],
                 response: null,
                 unlocked: true,
                 onCompletion: () => {
@@ -97,9 +100,10 @@ class Level1 extends Phaser.Scene {
             }));
             radioDialogue.push(new Dialogue(this, {
                 text: [
-                        `zzz...            \nthe discriminator is silent... the code 'FGD 135' is still displayed...`                      
+                        `zzz...            \nthe discriminator is silent... the previous code is still displayed...`,
+                        `| F | G | D | 1 | 3 | 5 |`                      
                       ],
-                speaker: ['CRM-114 Discriminator', ''],
+                speaker: [' ', 'CRM-114 Discriminator'],
                 response: null,
                 unlocked: true,
                 onCompletion: () => {}
@@ -108,15 +112,17 @@ class Level1 extends Phaser.Scene {
                 text: [
                         `*You send a confirmation request through the discriminator*`,
                         `CONFIRMED. RED ALERT.`,
-                        `*Confirmed... you should let the major know*`                      
+                        `*Confirmed... I should let the Major know*`                      
                       ],
-                speaker: ['Goldie', 'CRM-114 Discriminator', 'Goldie'],
+                speaker: [' ', 'CRM-114 Discriminator', 'Goldie'],
                 response: null,
                 unlocked: false,
                 onCompletion: () => {
                     this.music.play();
-                    this.kong.dialogues[2].dialogue.unlocked = true;
-                    this.kong.dialoguesCompleted = 2;
+                    this.kong.dialogues[5].dialogue.unlocked = true;
+                    this.kong.dialoguesCompleted = 5;
+                    this.kong.setTexture('kong_hat');
+                    this.kong.profile = 'kong_hat_head';
                 }
             }));
             radioDialogue.push(new Dialogue(this, {
@@ -134,7 +140,7 @@ class Level1 extends Phaser.Scene {
                 text: [
                         `*Your standard issue codebook, containing aircraft communications codes and their corresponding decipherings*`                      
                       ],
-                speaker: ['Codebook'],
+                speaker: [' '],
                 response: null,
                 unlocked: true,
                 onCompletion: () => {}
@@ -145,9 +151,9 @@ class Level1 extends Phaser.Scene {
                         `*You thumb through the codebook, looking for the new code's deciphering*`,
                         `FGD | 135 | Wing attack Plan R`,
                         `*Wing attack Plan R...*`,
-                        `*I should radio Major Kong*`                      
+                        `*I should use my radio to inform Major Kong*`                      
                       ],
-                speaker: ['Codebook', 'Goldie', 'Codebook', 'Goldie'],
+                speaker: [' ', ' ', 'Codebook', 'Goldie'],
                 response: null,
                 unlocked: false,
                 onCompletion: () => {
@@ -160,7 +166,7 @@ class Level1 extends Phaser.Scene {
                         `*The codebook is left open, the code's translation still visible*`,
                         `FGD | 135 | Wing attack Plan R`                      
                       ],
-                speaker: ['Codebook'],
+                speaker: [' ', 'Codebook'],
                 response: null,
                 unlocked: true,
                 onCompletion: () => {}
@@ -171,7 +177,7 @@ class Level1 extends Phaser.Scene {
                 text: [
                         `*Shouldn't someone be flying this thing?*`                      
                       ],
-                speaker: ['Cockpit'],
+                speaker: ['Goldie'],
                 response: null,
                 unlocked: true,
                 onCompletion: () => {}
@@ -180,7 +186,51 @@ class Level1 extends Phaser.Scene {
             // MAJOR KONG
             kongDialogue.push(new Dialogue(this, {
                 text: [
-                        `Hi Goldie. Anything to report?`                      
+                        `Anything to report, Goldie?`,
+                        `No sir.`                      
+                      ],
+                speaker: ['Major Kong', 'Goldie'],
+                response: null,
+                unlocked: true,
+                onCompletion: () => {},
+            }));
+            kongDialogue.push(new Dialogue(this, {
+                text: [
+                        `Major Kong... I know you'll think this is crazy, but I just got a message from base over the CRM 114. It decodes as Wing attack Plan R. R for Romeo.`,
+                        `Goldie... did you say Wing attack Plan R?`,
+                        `Yes sir, I have.`,
+                        `Goldie, how many times have I told you guys that I don't want no horsin' around on the airplane?`,
+                        `I'm not horsin' around, sir, thats how it decodes!`,
+                        `Well I've been to one world fair, a picnic, and a rodeo and that's the stupidest thing I ever heard come over a set of earphones!`,
+                        `You sure you got today's code?`,
+                        `Yes sir, it is.`,
+                        `Oh there's just gotta be something wrong... wait a second, I'm coming back.`                  
+                      ],
+                speaker: ['Goldie', 'Major Kong', 'Goldie', 'Major Kong', 'Goldie', 'Major Kong', '', 'Goldie', 'Major Kong'],
+                response: null,
+                unlocked: false,
+                onCompletion: () => {
+                    //this.radio.dialogues[2].dialogue.unlocked = true;
+                    //this.radio.dialoguesCompleted = 2;
+                    this.kong.setVelocity(200, 0);
+                    this.kong.anims.play('kong_walk');
+                    this.time.addEvent({
+                        callback: () => {
+                            this.kong.setVelocity(0,0);
+                            this.kong.anims.stop();
+                            this.kong.setTexture('kong');
+                            this.kong.dialogues[3].dialogue.unlocked = true;
+                            this.kong.dialoguesCompleted = 3;
+                        },
+                        repeat: 0,
+                        delay: 4500
+                    })
+
+                },
+            }));
+            kongDialogue.push(new Dialogue(this, {
+                text: [
+                        `There's just gotta be something wrong...`                      
                       ],
                 speaker: ['Major Kong'],
                 response: null,
@@ -189,24 +239,61 @@ class Level1 extends Phaser.Scene {
             }));
             kongDialogue.push(new Dialogue(this, {
                 text: [
-                        `*You inform Major Kong of the transmission*`,
-                        `... Maybe you better get a confirmation from base.`                      
+                        `*the Major looks at the CRM 114's code, then down to the codebook's translation`,
+                        `*He looks back at the CRM 114, tracing the code with his finger, then looks at the codebook once more, his finger tracing the translation...*`,
+                        `*...Major Kong spends a great deal of time looking back and forth from the codebook to the CRM 114...*`,
+                        `...Maybe you'd better get a confirmation from base.`,
+                        `Yes sir.`                      
                       ],
-                speaker: ['Goldie', 'Major Kong'],
+                speaker: [' ', ' ', ' ', 'Major Kong', 'Goldie'],
                 response: null,
                 unlocked: false,
                 onCompletion: () => {
                     this.radio.dialogues[2].dialogue.unlocked = true;
                     this.radio.dialoguesCompleted = 2;
+                    this.kong.setVelocity(-200, 0);
+                    this.kong.anims.play('kong_walk');
+                    this.kong.setFlipX(true);
+                    this.time.addEvent({
+                        callback: () => {
+                            this.kong.setVelocity(0,0);
+                            this.kong.anims.stop();
+                            this.kong.setTexture('kong');
+                            this.kong.setFlipX(true);
+                        },
+                        repeat: 0,
+                        delay: 4500
+                    })
                 },
             }));
             kongDialogue.push(new Dialogue(this, {
                 text: [
-                        `*You inform Major Kong that the message from base has been confirmed*`,
-                        `... Well boys, I reckon this is it.`,
-                        `Nuclear combat toe-to-toe with the Ruskies...`
+                        `...`                      
                       ],
-                speaker: ['Goldie', 'Major Kong'],
+                speaker: ['Major Kong'],
+                response: null,
+                unlocked: true,
+                onCompletion: () => {},
+            }));
+            kongDialogue.push(new Dialogue(this, {
+                text: [
+                        `*As you turn to inform the Major, you watch as he opens a safe next to the cockpit and dons a fierce looking cowboy hat*`,
+                        `Major Kong, message from base confirmed.`,
+                        `... Well boys, I reckon this is it.`,
+                        `Nuclear combat toe-to-toe with the Ruskies...`,
+                        `...`,
+                        `Look boys. I ain't much of a hand at making speeches...`,
+                        `...But I got a pretty fair idea that somethin' doggone important is going on back there...`,
+                        `...And I've got a fair idea of the kind of... personal emotions that some of you fellas may be thinking.`,
+                        `Heck, I reckon you wouldn't even be human beings if you didn't have some pretty strong personal feelings about nuclear combat.`,
+                        `But I want you to remember one thing.`,
+                        `The folks back home is counting on ya, and by golly, we ain't about to let 'em down.`,
+                        `...Tell ya something else.`,
+                        `If this thing turns out to be half as important as I figure it just might be, I'd say that you're all in line for some important promotions and personal citations when this thing's over with.`,
+                        `And that goes for every last one of you, regardless of your race, color or your creed.`,
+                        `Now let's get this thing on the hump! We got some flying to do!`
+                      ],
+                speaker: [' ', 'Goldie', 'Major Kong'],
                 response: null,
                 unlocked: false,
                 
@@ -221,6 +308,7 @@ class Level1 extends Phaser.Scene {
                             this.ominousText = this.add.text(game.config.width/2, game.config.height/2, 'TO BE CONTINUED...', {fontSize: '30px'}).setOrigin(0.5,0.5).setDepth(2);
                             this.ominousText.setScrollFactor(0);
                             this.exitTip.setColor('#FFFFFF');
+                            this.music.loop = false;
                         }
                     });
                 },
@@ -289,6 +377,16 @@ class Level1 extends Phaser.Scene {
                 this.anims.create({
                     key: 'pilot_walk',
                     frames: this.anims.generateFrameNumbers('pilot_walk', {start: 0, end: 1}),
+                    frameRate: 3,
+                    repeat: -1
+                });
+            }
+
+            // KONG WALK
+            if (!this.anims.exists('kong_walk')) {
+                this.anims.create({
+                    key: 'kong_walk',
+                    frames: this.anims.generateFrameNumbers('kong_walk', {start: 0, end: 1}),
                     frameRate: 3,
                     repeat: -1
                 });
