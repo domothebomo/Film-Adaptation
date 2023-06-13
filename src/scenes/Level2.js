@@ -18,12 +18,21 @@ class Level2 extends Phaser.Scene {
 
         // INTERACTABLES
         this.load.image('door', './sprites/door.png');
+        this.load.image('notes', './sprites/notes.png');
+        this.load.image('couch', './sprites/couch.png');
+        this.load.image('phone1', './sprites/phone1.png');
+        this.load.image('phone2', './sprites/phone2.png');
+        this.load.image('phonebooth', './sprites/phonebooth.png');
+        this.load.image('vending_machine', './sprites/vending_machine.png');
+        this.load.image('gunrack', './sprites/gunrack.png');
+        
 
         // CHARACTERS
         this.load.image('mandrake', './sprites/mandrake.png');
         this.load.image('mandrake_head', './sprites/mandrake_head.png');
         this.load.image('guano', './sprites/guano.png');
         this.load.image('guano_head', './sprites/guano_head.png');
+        this.load.image('blank', './sprites/blank.png');
 
         // SPRITESHEETS
         this.load.spritesheet('mandrake_walk', './sprites/mandrake_walk.png', {frameWidth: 12, frameHeight: 28, startFrame: 0, endFrame: 1});
@@ -142,10 +151,22 @@ class Level2 extends Phaser.Scene {
             this.bound14.body.immovable = true;
         }
 
-        this.officeDoor = new Interactable(this, game.config.width + 15, game.config.height - 225, 'door');
+        //this.officeDoor = new Interactable(this, game.config.width + 15, game.config.height - 225, 'door');
+        this.notes = new Interactable(this, game.config.width - 457, game.config.height - 140, 'notes');
+        this.phone1 = new Interactable(this, game.config.width - 457, game.config.height - 200, 'phone1');
+        this.phone1 = new Interactable(this, game.config.width - 457, game.config.height - 100, 'phone2');
+        this.couch = new Interactable(this, game.config.width -250, game.config.height, 'couch');
+        this.bathroom = new Interactable(this, game.config.width - 70, game.config.height + 90, 'couch').setAlpha(0);
+        this.gunrack = new Interactable(this, game.config.width -200, game.config.height - 290, 'gunrack');
+        this.vendingMachine = new Interactable(this, game.config.width -100, game.config.height + 390, 'vending_machine');
+        this.phonebooth = new Interactable(this, game.config.width +350, game.config.height + 390, 'phonebooth');
 
-        this.shadow1 = this.add.rectangle(0,0, game.config.width*4, game.config.height, '#000000', 1);
-        this.shadow2 = this.add.rectangle(game.config.width + 505,0, game.config.width, game.config.height*4, '#000000', 1);
+        this.guano = new Interactable(this, game.config.width + 150, game.config.height - 250, 'guano').setFlipX(true);
+        this.guano.body.setSize(12, 5);
+        this.guano.body.setOffset(0, 23);
+
+        //this.shadow1 = this.add.rectangle(0,0, game.config.width*4, game.config.height, '#000000', 1);
+        //this.shadow2 = this.add.rectangle(game.config.width + 505,0, game.config.width, game.config.height*4, '#000000', 1);
 
         // DIALOGUE BOX UI
         this.dialogueBox = this.add.sprite(30, 30, 'dialogue_box').setOrigin(0,0).setScale(1,0).setDepth(2);
