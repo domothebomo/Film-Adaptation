@@ -16,6 +16,9 @@ class Level2 extends Phaser.Scene {
         // UI
         this.load.image('dialogue_box', './sprites/dialogue_box.png');
 
+        // INTERACTABLES
+        this.load.image('door', './sprites/door.png');
+
         // CHARACTERS
         this.load.image('mandrake', './sprites/mandrake.png');
         this.load.image('mandrake_head', './sprites/mandrake_head.png');
@@ -71,9 +74,78 @@ class Level2 extends Phaser.Scene {
         }
 
         // PLAYER CLASS
-        this.player = new Player(this, game.config.width + 275, game.config.height + 25, 'mandrake').setDepth(1).setScale(4,4);   
+        this.player = new Player(this, game.config.width - 250, game.config.height - 100, 'mandrake').setDepth(1).setScale(4,4);   
         this.speakingTo = null;
         this.ending = false;
+
+        // BOUNDS
+        {
+            this.bound1 = this.physics.add.sprite(-158, game.config.height - 367, 'plane_hbounds').setOrigin(0,0).setScale(4,11).setAlpha(0);
+            this.physics.add.collider(this.bound1, this.player);
+            this.bound1.body.immovable = true;
+
+            this.bound2 = this.physics.add.sprite(game.config.width + 255, game.config.height - 367, 'plane_hbounds').setOrigin(0,0).setScale(4,11).setAlpha(0);
+            this.physics.add.collider(this.bound2, this.player);
+            this.bound2.body.immovable = true;
+
+            this.bound3 = this.physics.add.sprite(-158, -30, 'plane_hbounds').setOrigin(0,0).setScale(4,11).setAlpha(0);
+            this.physics.add.collider(this.bound3, this.player);
+            this.bound3.body.immovable = true;
+
+            this.bound4 = this.physics.add.sprite(game.config.width + 255, -30, 'plane_hbounds').setOrigin(0,0).setScale(4,11).setAlpha(0);
+            this.physics.add.collider(this.bound4, this.player);
+            this.bound4.body.immovable = true;
+
+            this.bound5 = this.physics.add.sprite(-158, game.config.height + 50, 'plane_hbounds').setOrigin(0,0).setScale(4,11).setAlpha(0);
+            this.physics.add.collider(this.bound5, this.player);
+            this.bound5.body.immovable = true;
+
+            this.bound6 = this.physics.add.sprite(game.config.width - 300, game.config.height*2 - 25, 'plane_hbounds').setOrigin(0,0).setScale(4,11).setAlpha(0);
+            this.physics.add.collider(this.bound6, this.player);
+            this.bound6.body.immovable = true;
+
+            this.bound7 = this.physics.add.sprite(340, game.config.height - 367, 'plane_vbounds').setOrigin(0,0).setScale(4,13).setAlpha(0);
+            this.physics.add.collider(this.bound7, this.player);
+            this.bound7.body.immovable = true;
+
+            this.bound8 = this.physics.add.sprite(game.config.width - 5, game.config.height - 175, 'plane_vbounds').setOrigin(0,0).setScale(4,13).setAlpha(0);
+            this.physics.add.collider(this.bound8, this.player);
+            this.bound8.body.immovable = true;
+
+            this.bound9 = this.physics.add.sprite(game.config.width - 475, game.config.height - 220, 'plane_vbounds').setOrigin(0,0).setScale(9,5).setAlpha(0);
+            this.physics.add.collider(this.bound9, this.player);
+            this.bound9.body.immovable = true;
+
+            // DOOR
+            //this.bound9 = this.physics.add.sprite(game.config.width, game.config.height - 275, 'plane_vbounds').setOrigin(0,0).setScale(4,3).setAlpha(0);
+            //this.physics.add.collider(this.bound9, this.player);
+            //this.bound9.body.immovable = true;
+
+            this.bound10 = this.physics.add.sprite(game.config.width + 254, game.config.height - 280, 'plane_vbounds').setOrigin(0,0).setScale(4,17).setAlpha(0);
+            this.physics.add.collider(this.bound10, this.player);
+            this.bound10.body.immovable = true;
+
+            this.bound11 = this.physics.add.sprite(game.config.width - 200, game.config.height + 175, 'plane_vbounds').setOrigin(0,0).setScale(4,13).setAlpha(0);
+            this.physics.add.collider(this.bound11, this.player);
+            this.bound11.body.immovable = true;
+
+            this.bound12 = this.physics.add.sprite(game.config.width + 430, game.config.height + 175, 'plane_vbounds').setOrigin(0,0).setScale(4,13).setAlpha(0);
+            this.physics.add.collider(this.bound12, this.player);
+            this.bound12.body.immovable = true;
+
+            this.bound13 = this.physics.add.sprite(game.config.width - 200, game.config.height + 275, 'plane_hbounds').setOrigin(0,0).setScale(0.79,10).setAlpha(0);
+            this.physics.add.collider(this.bound13, this.player);
+            this.bound13.body.immovable = true;
+
+            this.bound14 = this.physics.add.sprite(game.config.width + 254, game.config.height + 275, 'plane_hbounds').setOrigin(0,0).setScale(0.79,10).setAlpha(0);
+            this.physics.add.collider(this.bound14, this.player);
+            this.bound14.body.immovable = true;
+        }
+
+        this.officeDoor = new Interactable(this, game.config.width + 15, game.config.height - 225, 'door');
+
+        this.shadow1 = this.add.rectangle(0,0, game.config.width*4, game.config.height, '#000000', 1);
+        this.shadow2 = this.add.rectangle(game.config.width + 505,0, game.config.width, game.config.height*4, '#000000', 1);
 
         // DIALOGUE BOX UI
         this.dialogueBox = this.add.sprite(30, 30, 'dialogue_box').setOrigin(0,0).setScale(1,0).setDepth(2);
