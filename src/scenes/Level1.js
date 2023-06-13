@@ -36,7 +36,7 @@ class Level1 extends Phaser.Scene {
         // AUDIO
         this.load.audio('music', './audio/hummm.mp3');
         this.load.audio('ambience', './audio/plane_ambience.wav'); // https://freesound.org/s/584597/
-        this.load.audio('blip', './audio/blip4.wav');
+        this.load.audio('blip', './audio/blip4.wav'); // https://freesound.org/people/SoftDistortionFX/sounds/398937/
         this.load.audio('walk', './audio/walk.wav');
         
     }
@@ -87,6 +87,7 @@ class Level1 extends Phaser.Scene {
                         `BEEP BEEP BEEP BEEP BEEP BEEP`,
                         `*The CRM-114 Discriminator is flashing a new code from command, 'FGD 135'*`                      
                       ],
+                speaker: ['CRM-114 Discriminator', ''],
                 response: null,
                 unlocked: true,
                 onCompletion: () => {
@@ -98,6 +99,7 @@ class Level1 extends Phaser.Scene {
                 text: [
                         `zzz...            \nthe discriminator is silent... the code 'FGD 135' is still displayed...`                      
                       ],
+                speaker: ['CRM-114 Discriminator', ''],
                 response: null,
                 unlocked: true,
                 onCompletion: () => {}
@@ -108,6 +110,7 @@ class Level1 extends Phaser.Scene {
                         `CONFIRMED. RED ALERT.`,
                         `*Confirmed... you should let the major know*`                      
                       ],
+                speaker: ['Goldie', 'CRM-114 Discriminator', 'Goldie'],
                 response: null,
                 unlocked: false,
                 onCompletion: () => {
@@ -120,6 +123,7 @@ class Level1 extends Phaser.Scene {
                 text: [
                         `CONFIRMED. RED ALERT.`                      
                       ],
+                speaker: ['CRM-114 Discriminator'],
                 response: null,
                 unlocked: true,
                 onCompletion: () => {}
@@ -130,6 +134,7 @@ class Level1 extends Phaser.Scene {
                 text: [
                         `*Your standard issue codebook, containing aircraft communications codes and their corresponding decipherings*`                      
                       ],
+                speaker: ['Codebook'],
                 response: null,
                 unlocked: true,
                 onCompletion: () => {}
@@ -140,8 +145,9 @@ class Level1 extends Phaser.Scene {
                         `*You thumb through the codebook, looking for the new code's deciphering*`,
                         `FGD | 135 | Wing attack Plan R`,
                         `*Wing attack Plan R...*`,
-                        `*You should inform Major Kong at the cockpit*`                      
+                        `*I should radio Major Kong*`                      
                       ],
+                speaker: ['Codebook', 'Goldie', 'Codebook', 'Goldie'],
                 response: null,
                 unlocked: false,
                 onCompletion: () => {
@@ -154,6 +160,7 @@ class Level1 extends Phaser.Scene {
                         `*The codebook is left open, the code's translation still visible*`,
                         `FGD | 135 | Wing attack Plan R`                      
                       ],
+                speaker: ['Codebook'],
                 response: null,
                 unlocked: true,
                 onCompletion: () => {}
@@ -164,6 +171,7 @@ class Level1 extends Phaser.Scene {
                 text: [
                         `*Shouldn't someone be flying this thing?*`                      
                       ],
+                speaker: ['Cockpit'],
                 response: null,
                 unlocked: true,
                 onCompletion: () => {}
@@ -174,6 +182,7 @@ class Level1 extends Phaser.Scene {
                 text: [
                         `Hi Goldie. Anything to report?`                      
                       ],
+                speaker: ['Major Kong'],
                 response: null,
                 unlocked: true,
                 onCompletion: () => {},
@@ -183,6 +192,7 @@ class Level1 extends Phaser.Scene {
                         `*You inform Major Kong of the transmission*`,
                         `... Maybe you better get a confirmation from base.`                      
                       ],
+                speaker: ['Goldie', 'Major Kong'],
                 response: null,
                 unlocked: false,
                 onCompletion: () => {
@@ -196,6 +206,7 @@ class Level1 extends Phaser.Scene {
                         `... Well boys, I reckon this is it.`,
                         `Nuclear combat toe-to-toe with the Ruskies...`
                       ],
+                speaker: ['Goldie', 'Major Kong'],
                 response: null,
                 unlocked: false,
                 
@@ -240,7 +251,7 @@ class Level1 extends Phaser.Scene {
         // DIALOGUE BOX UI
         this.dialogueBox = this.add.sprite(30, 30, 'dialogue_box').setOrigin(0,0).setScale(1,0).setDepth(2);
         this.dialogueBox.setScrollFactor(0);
-        this.speakerText = this.add.text(198, 41, 'Major Kong', {fontSize: '18px', fontFamily: 'Verdana', fontStyle: 'bold'}).setOrigin(0,0).setAlign('left').setDepth(2);
+        this.speakerText = this.add.text(198, 41, '', {fontSize: '18px', fontFamily: 'Verdana', fontStyle: 'bold'}).setOrigin(0,0).setAlign('left').setDepth(2);
         this.speakerText.setScrollFactor(0);
         this.dialogueText = this.add.text(198, 66, '', {fontSize: '18px', fontFamily: 'Verdana'}).setOrigin(0,0).setWordWrapWidth(600).setAlign('left').setDepth(2);
         this.dialogueText.setScrollFactor(0);
@@ -304,13 +315,7 @@ class Level1 extends Phaser.Scene {
                 this.activateRadio();
             }
             if (this.speakingTo === null && this.radioTip.open == false) {
-                this.radioTip.open = true;
-                this.tweens.add({
-                    targets: [this.radioTip],
-                    duration: 100,
-                    scaleY: {from: 0, to: 4},
-                    ease: 'Linear'
-                });
+                this.openRadioTip();
             }
     
         }
@@ -326,15 +331,29 @@ class Level1 extends Phaser.Scene {
     activateRadio() {
         if (this.speakingTo === null) {
             this.kong.interactWith();
-            this.radioTip.open = false;
-            this.tweens.add({
-                targets: [this.radioTip],
-                duration: 100,
-                scaleY: {from: 4, to: 0},
-                ease: 'Linear'
-    
-            });
+            this.closeRadioTip();
         }
+    }
+
+    closeRadioTip() {
+        this.radioTip.open = false;
+        this.tweens.add({
+            targets: [this.radioTip],
+            duration: 100,
+            scaleY: {from: 4, to: 0},
+            ease: 'Linear'
+
+        });
+    }
+
+    openRadioTip() {
+        this.radioTip.open = true;
+        this.tweens.add({
+            targets: [this.radioTip],
+            duration: 100,
+            scaleY: {from: 0, to: 4},
+            ease: 'Linear'
+        });
     }
 
 }

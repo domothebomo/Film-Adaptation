@@ -5,6 +5,7 @@ class Dialogue {
 
         // DIALOGUE OBJECT ATTRIBUTES:
         // text: The text to be displayed during dialogue
+        // speaker: Who is speaking in each string of the text
         // response: Dialogue options if player input is requested
         // unlocked: Whether this dialogue can be accessed yet
         // onCompletion: Function that triggers once dialogue finishes
@@ -18,6 +19,7 @@ class Dialogue {
     beginDialogue() {
         this.progress = 0;
         this.openDialogueBox();
+        this.checkSpeaker();
         this.rolloutDialogue(this.dialogue.text[this.progress]);
         this.progress += 1;
         
@@ -29,6 +31,7 @@ class Dialogue {
             this.scene.dialogueText.text = this.dialogue.text[this.progress - 1];
             this.rollout.remove();
         } else {
+            this.checkSpeaker();
             this.rolloutDialogue(this.dialogue.text[this.progress]);
             this.progress += 1;
         }
@@ -46,6 +49,13 @@ class Dialogue {
             this.dialogue.onCompletion();
             return true;
         };
+    }
+
+    checkSpeaker() {
+        this.currentSpeaker = this.dialogue.speaker[this.progress];
+        if (this.currentSpeaker != '' && this.currentSpeaker !== undefined) {
+            this.scene.speakerText.text = this.currentSpeaker;
+        }
     }
 
     openDialogueBox() {
