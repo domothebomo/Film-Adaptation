@@ -9,6 +9,9 @@ class Title extends Phaser.Scene {
 
     // SPRITES
     this.load.image('background', './sprites/sky.png');
+
+    // AUDIO
+    this.load.audio('blip', './audio/blip4.wav'); // https://freesound.org/people/SoftDistortionFX/sounds/398937/
   }
 
   create() {
@@ -40,7 +43,9 @@ class Title extends Phaser.Scene {
       useHandCursor: true
     });
     this.playButton.on('pointerdown', () => {
-      this.scene.start('level1Scene');
+      level = 1;
+      //this.scene.start('level1Scene');
+      this.scene.start('transitionScene');
     });
 
     // SCENE SELECT MODE BUTTON

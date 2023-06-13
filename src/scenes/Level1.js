@@ -43,7 +43,7 @@ class Level1 extends Phaser.Scene {
         // AUDIO
         this.load.audio('music', './audio/hummm.mp3');
         this.load.audio('ambience', './audio/plane_ambience.wav'); // https://freesound.org/s/584597/
-        this.load.audio('blip', './audio/blip4.wav'); // https://freesound.org/people/SoftDistortionFX/sounds/398937/
+        //this.load.audio('blip', './audio/blip4.wav'); // https://freesound.org/people/SoftDistortionFX/sounds/398937/
         this.load.audio('walk', './audio/walk.wav');
         
     }
@@ -347,11 +347,18 @@ class Level1 extends Phaser.Scene {
                         alpha: {from: 0, to: 1},
                         duration: 5000,
                         onComplete: () => {
-                            this.ominousText = this.add.text(game.config.width/2, game.config.height/2, 'TO BE CONTINUED...', {fontSize: '30px'}).setOrigin(0.5,0.5).setDepth(2);
-                            this.ominousText.setScrollFactor(0);
-                            this.exitTip.setColor('#FFFFFF');
+                            //this.ominousText = this.add.text(game.config.width/2, game.config.height/2, 'TO BE CONTINUED...', {fontSize: '30px'}).setOrigin(0.5,0.5).setDepth(2);
+                            //this.ominousText.setScrollFactor(0);
+                            //this.exitTip.setColor('#FFFFFF');
                             this.music.loop = false;
+                            level += 1;
+                            this.scene.start('transitionScene');
                         }
+                    });
+                    this.tweens.add({
+                        targets: this.music,
+                        volume: {from: 0.1, to: 0},
+                        duration: 5000,
                     });
                 },
             }));
