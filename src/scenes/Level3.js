@@ -35,10 +35,12 @@ class Level3 extends Phaser.Scene {
         this.load.image('official_head', './sprites/official_head.png');
 
         //SPRITESHEETS
-        
+        this.load.spritesheet('alexei_walk', './sprites/alexei_walk.png', {frameWidth: 12, frameHeight: 28, startFrame: 0, endFrame: 1});
+        this.load.spritesheet('strangelove_stand', './sprites/strangelove_stand.png', {frameWidth: 18, frameHeight: 28, startFrame: 0, endFrame: 4});
         
         // AUDIO
         this.load.audio('slide', './audio/slide3.wav'); // https://pixabay.com/sound-effects/sliding-noise-v2-83483/
+        this.load.audio('walk', './audio/walk2.mp3');
     }
 
     create() {
@@ -49,9 +51,35 @@ class Level3 extends Phaser.Scene {
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
 
+        // ANIMATIONS
+        {
+            // ALEXEI WALK
+            if (!this.anims.exists('alexei_walk')) {
+                this.anims.create({
+                    key: 'alexei_walk',
+                    frames: this.anims.generateFrameNumbers('alexei_walk', {start: 0, end: 1}),
+                    frameRate: 3,
+                    repeat: -1
+                });
+            }
+            // STRANGELOVE STAND
+            if (!this.anims.exists('strangelove_stand')) {
+                this.anims.create({
+                    key: 'strangelove_stand',
+                    frames: this.anims.generateFrameNumbers('strangelove_stand', {start: 0, end: 4}),
+                    frameRate: 5,
+                    repeat: 0
+                });
+            }
+        }
+
         // SOUND
         {
             this.walk = this.sound.add("slide", {
+                volume: 0.2,
+                loop: true
+            });
+            this.walk2 = this.sound.add("walk", {
                 volume: 0.2,
                 loop: true
             });
@@ -69,7 +97,7 @@ class Level3 extends Phaser.Scene {
         let alexeiDialogue = [];
         let officialDialogue = [];
         {
-            // COUCH
+            // Big Board
             boardDialogue.push(new Dialogue(this, {
                 text: [
                         `*The Great Big Board of the War Room, showcasing a map of the Earth and relevant military data*`,
@@ -81,6 +109,7 @@ class Level3 extends Phaser.Scene {
                 onCompletion: () => {}
             }));
 
+            // CHART
             chartDialogue.push(new Dialogue(this, {
                 text: [
                         `*Your personal information chart, displaying scientific data for various elements and procedures regarding nuclear development*`,   
@@ -90,7 +119,22 @@ class Level3 extends Phaser.Scene {
                 unlocked: true,
                 onCompletion: () => {}
             }));
+            chartDialogue.push(new Dialogue(this, {
+                text: [
+                        `*Your personal information chart, displaying scientific data for various elements and procedures regarding nuclear development*`,
+                        `*You look up Cobalt Thorium G, the material used in the Soviet doomsday device*`,
+                        `COBALT THORIUM G - RADIOACTIVE HALF-LIFE OF 93 YEARS`   
+                      ],
+                speaker: [` `, ` `, ` `],
+                response: null,
+                unlocked: false,
+                onCompletion: () => {
+                    this.muffley.dialogues[2].dialogue.unlocked = true;
+                    this.muffley.dialoguesCompleted = 2;
+                }
+            }));
 
+            // OFFICIALS
             officialDialogue.push(new Dialogue(this, {
                 text: [
                         `Greetings, Doctor.`,   
@@ -101,6 +145,7 @@ class Level3 extends Phaser.Scene {
                 onCompletion: () => {}
             }));
 
+            // AMBASSADOR ALEXEI
             alexeiDialogue.push(new Dialogue(this, {
                 text: [
                         `I can only hope my country's defenses are successful in preventing this catastrophe.`,   
@@ -109,6 +154,196 @@ class Level3 extends Phaser.Scene {
                 response: null,
                 unlocked: true,
                 onCompletion: () => {}
+            }));
+            alexeiDialogue.push(new Dialogue(this, {
+                text: [
+                        `I must confess, you have an astonishingly good idea there, Doctor.`, 
+                        `Thank you, sir...`  
+                      ],
+                speaker: [`Ambassador Alexei`, `Dr. Strangelove`],
+                response: null,
+                unlocked: false,
+                onCompletion: () => {}
+            }));
+            alexeiDialogue.push(new Dialogue(this, {
+                text: [
+                        `*SNAP*`, 
+                        `*The Ambassadar seems to be fumbling with a pocketwatch held up towards the Big Board when he notices you*`,
+                        `Ah, Dr. Stranglove. I wish you good luck on your project.`  
+                      ],
+                speaker: [` `, ` `, `Ambassador Alexei`],
+                response: null,
+                unlocked: false,
+                onCompletion: () => {}
+            }));
+            alexeiDialogue.push(new Dialogue(this, {
+                text: [
+                        `I wish you good luck on your project, Dr. Strangelove.`  
+                      ],
+                speaker: [`Ambassador Alexei`],
+                response: null,
+                unlocked: true,
+                onCompletion: () => {}
+            }));
+
+            // GENERAL TURGIDSON
+            turgidsonDialogue.push(new Dialogue(this, {
+                text: [
+                        `Ohhh I bet my boys in the Wing are flyin' true as ever right now!`,
+                        `...Hopefully not too well...`   
+                      ],
+                speaker: [`General Turgidson`],
+                response: null,
+                unlocked: true,
+                onCompletion: () => {}
+            }));
+            turgidsonDialogue.push(new Dialogue(this, {
+                text: [
+                        `Doctor... you mentioned the uh... ratio of ten women to each man... now wouln't that necessitate the abandonment of the so-called monogamous sexual relationship, I mean, as far as men were concerned?`,
+                        `Regrettably, yes... but it is a sacrifice required for the future of the human race... I hasten to add that since each man will be required to do prodigious... service along these lines... the women will have to be selected for their sexual characteristics, which will have to be of a highly stimulatiing nature.`,                         
+                        `I think we ought to look at this from the military point of view. I mean, supposing the Ruskies stashed away some big bombs, see, and we didn't? When they come out in 100 years, they could take over!`,    
+                        `*The Ambassador rolls his eyes, before exiting the conversation*`
+                    ],
+                speaker: [`General Turgidson`, `Dr. Strangelove`, `General Turgidson`, ` `],
+                response: null,
+                unlocked: false,
+                onCompletion: () => {
+                    this.alexei.dialogues[2].dialogue.unlocked = true;
+                    this.alexei.dialoguesCompleted = 2;
+                    
+                    this.alexei.setVelocity(-200, 0);
+                    this.alexei.setFlipX(true);
+                    this.alexei.play('alexei_walk');
+                    this.walk2.play();
+                    this.time.addEvent({
+                        callback: () => {
+                            this.speakingTo = null;
+                            this.walk2.stop();
+                            this.alexei.setVelocity(0,0);
+                            this.alexei.anims.stop();
+                            this.alexei.setTexture('alexei');
+                        },
+                        repeat: 0,
+                        delay: 2500
+                    })
+                }
+            }));
+            turgidsonDialogue.push(new Dialogue(this, {
+                text: [
+                        `In fact, they might even try an immediate sneak attack so they could take over our mine shaft space!`,  
+                        `I think it'd be extremely naive of us, Mr. President, to imagine that these new developments are gonna cause any change in Soviet expansionist policy!`,
+                        `I mean, we must be increasingly on the alert! To prevent them from taking over other mine shaft space, in order to breed more prodigiously than we do, thus, knocking us out through superior numbers when we emerge!`,
+                        `MR. PRESIDENT, WE MUST NOT ALLOW, A MINE SHAFT GAP!!!`,
+                        `SIR!!!`
+                      ],
+                speaker: [`General Turgidson`, ``, ``, ``, `Dr. Strangelove`],
+                response: null,
+                unlocked: true,
+                onCompletion: () => {
+                    this.paused = true;
+                    this.player.setVelocity(200, -200);
+                    this.player.setFlipX(false);
+                    //this.alexei.play('alexei_walk');
+                    this.walk.play();
+                    this.time.addEvent({
+                        callback: () => {
+                            //this.paused = false;
+                            this.speakingTo = null;
+                            this.walk.stop();
+                            this.player.setVelocity(0,0);
+                            //this.player.anims.stop()
+                            //this.player.play('strangelove_stand');
+                            //this.player.setTexture('strangelove');
+                            this.player.play('strangelove_stand');
+                            this.player.on('animationcomplete', () => {
+                                this.paused = false;
+                                this.chart.dialogues[4].dialogue.unlocked = true;
+                                this.chart.dialoguesCompleted = 4;
+                                this.muffley.interactWith();
+                            });
+                        },
+                        repeat: 0,
+                        delay: 500
+                    })
+                }
+            }));
+
+            // PRESIDENT MUFFLEY
+            muffleyDialogue.push(new Dialogue(this, {
+                text: [
+                        `Mr. President, I would not rule out the chance to preserve a nucleus of human specimens...`,
+                        `It would be quite easy... hee... hee... at the bottom of some of our deeper mine shafts...`,
+                        `The radioactivity would never pentrate a mine some thousands of feet deep...`,
+                        `And in a matter of weeks, sufficient improvements in dwelling space could easily be provided...`,
+                        `...How long would you have to stay down there?`,
+                        `Well, that's, you know...`,
+                        `A moment, please...`   
+                      ],
+                speaker: [`Dr. Strangelove`, ``, ``, ``, `President Muffley`, `Dr. Strangelove`],
+                response: null,
+                unlocked: true,
+                onCompletion: () => {
+                    this.chart.dialogues[1].dialogue.unlocked = true;
+                    this.chart.dialoguesCompleted = 1;
+                }
+            }));
+            muffleyDialogue.push(new Dialogue(this, {
+                text: [
+                        `...How long would you have to stay down there?`,
+                        `Well, that's, you know...`,
+                        `A moment, please...`   
+                      ],
+                speaker: [`President Muffley`, `Dr. Strangelove`],
+                response: null,
+                unlocked: true,
+                onCompletion: () => {}
+            }));
+            muffleyDialogue.push(new Dialogue(this, {
+                text: [
+                        `...How long would you have to stay down there?`,
+                        `I would think that... possibly... one hundred years...`, 
+                        `You mean people could actually stay down there for a hundred years?`,
+                        `It would not be difficult, Mein F-... hee, I'm sorry, Mr. President...`,
+                        `Nuclear reactors could provide power almost indefinitely... greenhouses could maintain plant life... animals could be bred and SLAUGHTERED...`,
+                        `A quick survey would have to be made of all the available mine sites in the country... but I would guess that a dwelling space for several hundred thousand of our people could easily be provided.`,
+                        `...Well I would hate to have to decide... who stays up... and who goes down.`,
+                        `Well, that would not be necessary, Mr. President. It could easily be accomplished with a computer... and the computer could be set and programmed to accept factors from youth, health, sexual fertility, intelligence, and a cross section of necessary skills.`,
+                        `Of course, it would be absolutely vital that our top government and military men be included, to foster and impart the required principles of leadership and tradition.`,
+                        `Naturally, they would breed prodigiously, eh... there would be much time and little to do, hee hee...`,
+                        `...But with the proper breeding techniques and a ratio of... say... ten females to each male... I would guess that they could then work their way back to the present gross national product within, say, 20 years.`,
+                        `...I see...`  
+                    ],
+                speaker: [`President Muffley`, `Dr. Strangelove`, `President Muffley`, `Dr. Strangelove`, ``, ``, `President Muffley`, `Dr. Strangelove`, ``, ``, ``, `President Muffley`],
+                response: null,
+                unlocked: false,
+                onCompletion: () => {
+                    this.turgidson.dialogues[1].dialogue.unlocked = true;
+                    this.turgidson.dialoguesCompleted = 1;
+                    this.alexei.dialogues[1].dialogue.unlocked = true;
+                    this.alexei.dialoguesCompleted = 1;
+                }
+            }));
+            muffleyDialogue.push(new Dialogue(this, {
+                text: [
+                        `*The president is silent, seemingly pondering your proposed plan*`  
+                      ],
+                speaker: [` `],
+                response: null,
+                unlocked: true,
+                onCompletion: () => {}
+            }));
+            muffleyDialogue.push(new Dialogue(this, {
+                text: [
+                        `I have a plan...`,
+                        `...`,
+                        `I CAN WALK!!!!`  
+                      ],
+                speaker: [`Dr. Strangelove`],
+                response: null,
+                unlocked: false,
+                onCompletion: () => {
+
+                }
             }));
         }
 
@@ -153,7 +388,7 @@ class Level3 extends Phaser.Scene {
         this.muffley.body.setSize(12, 5);
         this.muffley.body.setOffset(0, 23);
 
-        this.turgidson = new Interactable(this, game.config.width + 350, game.config.height + 250, 'turgidson', turgidsonDialogue, 'turgidson_head').setFlipX(true);
+        this.turgidson = new Interactable(this, game.config.width + 350, game.config.height + 250, 'turgidson', turgidsonDialogue, 'turgidson_head');
         this.turgidson.body.setSize(12, 5);
         this.turgidson.body.setOffset(0, 23);
 
