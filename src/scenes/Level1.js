@@ -22,6 +22,8 @@ class Level1 extends Phaser.Scene {
         this.load.image('radio', './sprites/radio.png');
         this.load.image('codebook', './sprites/codebook.png');
         this.load.image('cockpit', './sprites/cockpit.png');
+        this.load.image('equipment1', './sprites/plane_equipment1.png');
+        this.load.image('safe', './sprites/safe.png');
 
         // CHARACTERS
         this.load.image('kong', './sprites/kong.png');
@@ -30,6 +32,9 @@ class Level1 extends Phaser.Scene {
         this.load.image('kong_hat_head', './sprites/kong_hat_head.png');
         this.load.image('pilot', './sprites/pilot.png');
         this.load.image('pilot_head', './sprites/pilot_head.png');
+        this.load.image('crewmate2', './sprites/crewmate2.png');
+        this.load.image('crewmate3', './sprites/crewmate3.png');
+        this.load.image('blank', './sprites/blank.png');
 
         // SPRITESHEETS
         this.load.spritesheet('pilot_walk', './sprites/pilot_walk.png', {frameWidth: 12, frameHeight: 28, startFrame: 0, endFrame: 1});
@@ -56,7 +61,7 @@ class Level1 extends Phaser.Scene {
 
 
         // PLAYER CLASS
-        this.player = new Player(this, game.config.width + 200, game.config.height + 25, 'pilot').setDepth(1).setScale(4,4);   
+        this.player = new Player(this, game.config.width + 275, game.config.height + 25, 'pilot').setDepth(1).setScale(4,4);   
         this.speakingTo = null;
         this.ending = false;
 
@@ -78,11 +83,48 @@ class Level1 extends Phaser.Scene {
         this.leftBound.body.immovable = true;
 
         // DIALOGUE
+        let crewmateDialogue = [];
+        let safeDialogue = [];
+        let equipmentDialogue = [];
         let radioDialogue = [];
         let codebookDialogue = [];
         let cockpitDialogue = [];
         let kongDialogue = [];
         {
+            // CREWMATES
+            crewmateDialogue.push(new Dialogue(this, {
+                text: [
+                        `*He seems busy*`                    
+                      ],
+                speaker: [`Goldie`],
+                response: null,
+                unlocked: true,
+                onCompletion: () => {}
+            }));
+
+            // SAFE
+            safeDialogue.push(new Dialogue(this, {
+                text: [
+                        `*Major Kong's personal safe... Best not to touch it*`                    
+                      ],
+                speaker: [`Goldie`],
+                response: null,
+                unlocked: true,
+                onCompletion: () => {}
+            }));
+
+            equipmentDialogue.push(new Dialogue(this, {
+                text: [
+                        `*Various equipment to manage the weapons and systems of the B-52*`,
+                        `*...I think I'll stick with my radio*`                    
+                      ],
+                speaker: [`Goldie`],
+                response: null,
+                unlocked: true,
+                onCompletion: () => {}
+            }));
+
+
             // RADIO
             radioDialogue.push(new Dialogue(this, {
                 text: [
@@ -277,7 +319,7 @@ class Level1 extends Phaser.Scene {
             }));
             kongDialogue.push(new Dialogue(this, {
                 text: [
-                        `*As you turn to inform the Major, you watch as he opens a safe next to the cockpit and dons a fierce looking cowboy hat*`,
+                        `*As you turn to inform the Major, you watch as he opens a safe next to the cockpit and dons his fierce ten-gallon hat*`,
                         `Major Kong, message from base confirmed.`,
                         `... Well boys, I reckon this is it.`,
                         `Nuclear combat toe-to-toe with the Ruskies...`,
@@ -288,10 +330,10 @@ class Level1 extends Phaser.Scene {
                         `Heck, I reckon you wouldn't even be human beings if you didn't have some pretty strong personal feelings about nuclear combat.`,
                         `But I want you to remember one thing.`,
                         `The folks back home is counting on ya, and by golly, we ain't about to let 'em down.`,
-                        `...Tell ya something else.`,
+                        `...Tell ya somethin' else.`,
                         `If this thing turns out to be half as important as I figure it just might be, I'd say that you're all in line for some important promotions and personal citations when this thing's over with.`,
-                        `And that goes for every last one of you, regardless of your race, color or your creed.`,
-                        `Now let's get this thing on the hump! We got some flying to do!`
+                        `And that goes for every last one of ya, regardless of your race, color or your creed.`,
+                        `Now let's get this thing on the hump! We got some flyin' to do!`
                       ],
                 speaker: [' ', 'Goldie', 'Major Kong'],
                 response: null,
@@ -299,7 +341,7 @@ class Level1 extends Phaser.Scene {
                 
                 onCompletion: () => {
                     this.ending = true;
-                    this.transitionScreen = this.add.rectangle(0,0, game.config.width*4, game.config.height*4, '#000000', 1).setDepth(1);
+                    this.transitionScreen = this.add.rectangle(0,0, game.config.width*4, game.config.height*4, '#000000', 1).setDepth(2);
                     this.tweens.add({
                         targets: this.transitionScreen,
                         alpha: {from: 0, to: 1},
@@ -359,11 +401,20 @@ class Level1 extends Phaser.Scene {
         this.radioTip.setScrollFactor(0);
         this.radioTip.open = true;
 
-        // INTERACTABLE OBJECTS + CHARACTERS
+        // INTERACTABLE OBJECTS
         this.radio = new Interactable(this, game.config.width + 390, game.config.height - 30, 'radio', radioDialogue);
         this.codebook = new Interactable(this, game.config.width + 490, game.config.height + 75, 'codebook', codebookDialogue);
-        this.cockpit = new Interactable(this, game.config.width-690, game.config.height + 40, 'cockpit', cockpitDialogue);
-        this.kong = new Interactable(this, game.config.width-600, game.config.height + 20, 'kong', kongDialogue, 'kong_head');
+        this.cockpit = new Interactable(this, game.config.width-690, game.config.height + 40, 'cockpit', cockpitDialogue).setAlpha(0);
+        this.equipment1 = new Interactable(this, game.config.width, game.config.height - 30, 'equipment1', equipmentDialogue, 'blank');
+        this.safe = new Interactable(this, game.config.width - 500, game.config.height - 25, 'safe', safeDialogue);
+
+        // CHARACTERS
+        this.kong = new Interactable(this, game.config.width-600, game.config.height + 20, 'kong', kongDialogue, 'kong_head').setDepth(1);
+        this.kong.body.setSize(12, 5);
+        this.kong.body.setOffset(0, 23);
+        this.lothar = new Interactable(this, game.config.width + 100, game.config.height - 20, 'crewmate2', crewmateDialogue, 'blank').setDepth(1);
+        this.lothar.setFlipX(true);
+        this.ace = new Interactable(this, game.config.width - 125, game.config.height - 20, 'crewmate3', crewmateDialogue, 'blank').setDepth(1);
 
         // CAMERA
         this.cameras.main.setBounds(0, 0, game.config.width * 2, game.config.height * 2);
@@ -408,6 +459,10 @@ class Level1 extends Phaser.Scene {
             this.codebook.update();
             this.cockpit.update();
             this.kong.update();
+            this.lothar.update();
+            this.ace.update();
+            this.safe.update();
+            this.equipment1.update();
 
             if (Phaser.Input.Keyboard.JustDown(keyR)) {
                 this.activateRadio();
@@ -415,6 +470,8 @@ class Level1 extends Phaser.Scene {
             if (this.speakingTo === null && this.radioTip.open == false) {
                 this.openRadioTip();
             }
+
+            this.checkDepth();
     
         }
 
@@ -424,6 +481,16 @@ class Level1 extends Phaser.Scene {
             this.scene.start('titleScene');
         }
 
+    }
+
+    checkDepth() {
+        if (this.player.y < this.kong.y) {
+            this.player.setDepth(1);
+            this.kong.setDepth(2);
+        } else {
+            this.player.setDepth(2);
+            this.kong.setDepth(1);
+        }
     }
 
     activateRadio() {
