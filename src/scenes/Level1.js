@@ -63,6 +63,7 @@ class Level1 extends Phaser.Scene {
         this.player = new Player(this, game.config.width + 275, game.config.height + 25, 'pilot').setDepth(1).setScale(4,4);   
         this.speakingTo = null;
         this.ending = false;
+        this.paused = false;
 
         // PLANE BOUNDS
         this.upperBound = this.physics.add.sprite(game.config.width - 60, game.config.height - 16, 'plane_hbounds').setScale(4,4).setAlpha(0);
@@ -445,6 +446,8 @@ class Level1 extends Phaser.Scene {
                 });
             }
         }
+
+        this.createPauseMenu();
         
     }
 
@@ -452,7 +455,7 @@ class Level1 extends Phaser.Scene {
         // BACKGROUND MOVEMENT
         this.background.tilePositionX -= 10;
 
-        if (!this.ending) {
+        if (!this.ending && !this.paused) {
             // UPDATE PLAYER
             this.player.update();
 
@@ -475,14 +478,100 @@ class Level1 extends Phaser.Scene {
 
             this.checkDepth();
     
+            if (Phaser.Input.Keyboard.JustDown(keyESC)) {
+                this.pauseGame();
+            }
         }
 
-        if (Phaser.Input.Keyboard.JustDown(keyESC)) {
+        if (Phaser.Input.Keyboard.JustDown(keyESC) && this.pauseText.alpha == 1) {
+            this.unpauseGame();
+        }
+
+    }
+
+    createPauseMenu() {
+        // UI TEXT STYLE
+        this.UIConfig = {
+            color: '#FFFFFF',
+            fontFamily: 'Verdana',
+            fontSize: '15px',
+            align: 'center'
+        };
+
+        this.UIConfig.fontSize = '40px';
+        this.pauseText = this.add.text(game.config.width/2, game.config.height/2 - 100, 'PAUSED', this.UIConfig).setAlign('center').setOrigin(0.5,0).setScrollFactor(0).setDepth(5);
+
+        this.UIConfig.fontSize = '18px';
+        this.UIConfig.color = '#000000'
+        this.resumeButton = this.add.rectangle(game.config.width / 2, game.config.height / 2 - 20, 200, 50, 0xbbbbbb).setScrollFactor(0).setDepth(5);
+        this.resumeButtonText = this.add.text(this.resumeButton.x, this.resumeButton.y, 'RESUME', this.UIConfig).setOrigin(0.5, 0.5).setScrollFactor(0).setDepth(5);
+        this.resumeButton.setInteractive({
+            useHandCursor: true
+        });
+        this.resumeButton.on('pointerdown', () => {
+            this.unpauseGame();
+        });
+
+        this.UIConfig.fontSize = '18px';
+        this.UIConfig.color = '#000000'
+        this.restartButton = this.add.rectangle(game.config.width / 2, game.config.height / 2 + 40, 200, 50, 0xbbbbbb).setScrollFactor(0).setDepth(5);
+        this.restartButtonText = this.add.text(this.restartButton.x, this.restartButton.y, 'RESTART', this.UIConfig).setOrigin(0.5, 0.5).setScrollFactor(0).setDepth(5);
+        this.restartButton.setInteractive({
+            useHandCursor: true
+        });
+        this.restartButton.on('pointerdown', () => {
+            level = 0;
+            first_level = true;
+            this.scene.start('transitionScene');
+        });
+
+        this.UIConfig.fontSize = '18px';
+        this.UIConfig.color = '#000000'
+        this.quitButton = this.add.rectangle(game.config.width / 2, game.config.height / 2 + 100, 200, 50, 0xbbbbbb).setScrollFactor(0).setDepth(5);
+        this.quitButtonText = this.add.text(this.quitButton.x, this.quitButton.y, 'QUIT TO MENU', this.UIConfig).setOrigin(0.5, 0.5).setScrollFactor(0).setDepth(5);
+        this.quitButton.setInteractive({
+            useHandCursor: true
+        });
+        this.quitButton.on('pointerdown', () => {
             this.ambience.stop();
             this.music.stop();
             this.scene.start('titleScene');
-        }
+        });
 
+        this.pauseText.alpha = 0;
+        this.resumeButton.alpha = 0;
+        this.resumeButtonText.alpha = 0;
+        this.restartButton.alpha = 0;
+        this.restartButtonText.alpha = 0;
+        this.quitButton.alpha = 0;
+        this.quitButtonText.alpha = 0;
+    }
+
+    pauseGame() {
+        this.player.setVelocity(0,0);
+        this.player.anims.stop();
+        this.walk.stop();
+        this.player.handleTexture();
+
+        this.paused = true;
+        this.pauseText.alpha = 1;
+        this.resumeButton.alpha = 1;
+        this.resumeButtonText.alpha = 1;
+        this.restartButton.alpha = 1;
+        this.restartButtonText.alpha = 1;
+        this.quitButton.alpha = 1;
+        this.quitButtonText.alpha = 1;
+    }
+
+    unpauseGame() {
+        this.paused = false;
+        this.pauseText.alpha = 0;
+        this.resumeButton.alpha = 0;
+        this.resumeButtonText.alpha = 0;
+        this.restartButton.alpha = 0;
+        this.restartButtonText.alpha = 0;
+        this.quitButton.alpha = 0;
+        this.quitButtonText.alpha = 0;
     }
 
     checkDepth() {

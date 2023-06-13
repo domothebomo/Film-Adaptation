@@ -4,7 +4,7 @@ class Transition extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('explosion', './assets/sprites/explosion.png');
+        //this.load.image('explosion', './assets/sprites/explosion.png');
     }
 
     create() {
@@ -26,7 +26,7 @@ class Transition extends Phaser.Scene {
 
         this.introDialogue = introDialogue[level];
         if (first_level) {
-            //this.introDialogue += '\n\nUse the ARROW keys to move, SPACE to interact with objects and individuals, and ESC to pause the game.';
+            this.introDialogue += '\n\nUse the ARROW keys to move, SPACE to interact with objects and individuals, and ESC to pause the game.';
         }
         if (level != 3) {
             this.introDialogue += '\n\nPress SPACE to continue';
@@ -43,8 +43,6 @@ class Transition extends Phaser.Scene {
                 }
             });
         }
-
-        //this.dialogueText = this.add.text(198, 66, '', this.UIConfig).setWordWrapWidth(600).setAlign('left').setOrigin(0,0).setDepth(1);
 
         this.rolloutDialogue(this.introDialogue);
 

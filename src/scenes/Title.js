@@ -9,6 +9,7 @@ class Title extends Phaser.Scene {
 
     // SPRITES
     this.load.image('background', './sprites/sky.png');
+    this.load.image('explosion', './sprites/explosion.png');
 
     // AUDIO
     this.load.audio('blip', './audio/blip4.wav'); // https://freesound.org/people/SoftDistortionFX/sounds/398937/
@@ -17,7 +18,7 @@ class Title extends Phaser.Scene {
   create() {
 
     // BACKGROUND SPRITES
-    this.background = this.add.tileSprite(0,0, game.config.width * 2, game.config.height * 2, 'background').setOrigin(0,0);     
+    this.background = this.add.tileSprite(0,0, game.config.width * 2, game.config.height * 2, 'explosion').setOrigin(0,0).setScale(2,2);     
     
 
     // UI TEXT STYLE
@@ -43,8 +44,7 @@ class Title extends Phaser.Scene {
       useHandCursor: true
     });
     this.playButton.on('pointerdown', () => {
-      level = 0;
-      //this.scene.start('level1Scene');
+      level = 1;
       this.scene.start('transitionScene');
     });
 
@@ -58,7 +58,6 @@ class Title extends Phaser.Scene {
     this.modeButton.on('pointerdown', () => {
       level = 2;
       this.scene.start('transitionScene');
-      console.log('Coming soon!');
     });
 
     // CREDITS BUTTON
@@ -69,21 +68,11 @@ class Title extends Phaser.Scene {
       useHandCursor: true
     });
     this.creditsButton.on('pointerdown', () => {
-      console.log('Coming soon!');
     });
 
-    // TUTORIAL BUTTON
-    
-
-    // CREDITS TEXT
-    //this.UIConfig.color = '#FFFFFF';
-    //this.creditsText = this.add.text(game.config.width / 2, game.config.height / 2 + 160, 'created by Dominic Fanaris', this.UIConfig).setOrigin(0.5,0.5);
     level = 0;
+    first_level = true;
 
-  }
-
-  update() {
-    this.background.tilePositionX -= 10;
   }
 
 }

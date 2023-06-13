@@ -89,7 +89,7 @@ class Level3 extends Phaser.Scene {
                 volume: 0.1,
             });
             this.rumble = this.sound.add("rumble", {
-                volume: 0.4,
+                volume: 1,
             });
             endMusic = this.sound.add("end_music", {
                 volume: 0.1,
@@ -251,17 +251,12 @@ class Level3 extends Phaser.Scene {
                     this.paused = true;
                     this.player.setVelocity(200, -200);
                     this.player.setFlipX(false);
-                    //this.alexei.play('alexei_walk');
                     this.walk.play();
                     this.time.addEvent({
                         callback: () => {
-                            //this.paused = false;
                             this.speakingTo = null;
                             this.walk.stop();
                             this.player.setVelocity(0,0);
-                            //this.player.anims.stop()
-                            //this.player.play('strangelove_stand');
-                            //this.player.setTexture('strangelove');
                             this.player.play('strangelove_stand');
                             this.walk2.play();
                             this.player.on('animationcomplete', () => {
@@ -361,8 +356,6 @@ class Level3 extends Phaser.Scene {
                         alpha: {from: 0, to: 1},
                         duration: 10000,
                         onComplete: () => {
-                            //this.music.loop = false;
-                            //this.ambience.stop();
                             level += 1;
                             this.scene.start('transitionScene');
                         }
@@ -370,9 +363,6 @@ class Level3 extends Phaser.Scene {
                 }
             }));
         }
-
-        //this.transitionScreen = this.add.rectangle(0,0, game.config.width*4, game.config.height*4, '0xFFFFFF', 1).setDepth(4);
-
 
         // PLAYER CLASS
         this.player = new Player(this, game.config.width + 100, 180, 'strangelove').setScale(4,4).setDepth(2);   
@@ -426,8 +416,6 @@ class Level3 extends Phaser.Scene {
         this.official2 = new Interactable(this, game.config.width*2 - 250, game.config.height - 100, 'official', officialDialogue, 'official_head').setFlipX(true);
         this.official3 = new Interactable(this, game.config.width*2 - 275, game.config.height + 100, 'official', officialDialogue, 'official_head').setFlipX(true);
         this.official4 = new Interactable(this, game.config.width + 275, game.config.height + 25, 'official', officialDialogue, 'official_head');
-        //this.official.body.setSize(12, 5);
-        //this.official.body.setOffset(0, 23);
 
 
         // DIALOGUE BOX UI
@@ -446,6 +434,8 @@ class Level3 extends Phaser.Scene {
         this.cameras.main.setBounds(0, 0, game.config.width * 2, game.config.height * 2);
         this.cameras.main.startFollow(this.player, true, 0.25, 0.25);
         this.physics.world.bounds.setTo(0, 0, game.config.width * 2, game.config.height * 2);
+
+        this.createPauseMenu();
     }
 
     update() {
@@ -463,15 +453,107 @@ class Level3 extends Phaser.Scene {
             this.turgidson.update();
             this.alexei.update();
             this.official1.update();
+            this.official2.update();
+            this.official3.update();
+            this.official4.update();
+
+            if (Phaser.Input.Keyboard.JustDown(keyESC)) {
+                this.pauseGame();
+            }
         }
+
+        if (Phaser.Input.Keyboard.JustDown(keyESC) && this.pauseText.alpha == 1) {
+            this.unpauseGame();
+        }
+    }
+
+    createPauseMenu() {
+        // UI TEXT STYLE
+        this.UIConfig = {
+            color: '#FFFFFF',
+            fontFamily: 'Verdana',
+            fontSize: '15px',
+            align: 'center'
+        };
+
+        this.UIConfig.fontSize = '40px';
+        this.pauseText = this.add.text(game.config.width/2, game.config.height/2 - 100, 'PAUSED', this.UIConfig).setAlign('center').setOrigin(0.5,0).setScrollFactor(0).setDepth(5);
+
+        this.UIConfig.fontSize = '18px';
+        this.UIConfig.color = '#000000'
+        this.resumeButton = this.add.rectangle(game.config.width / 2, game.config.height / 2 - 20, 200, 50, 0xbbbbbb).setScrollFactor(0).setDepth(5);
+        this.resumeButtonText = this.add.text(this.resumeButton.x, this.resumeButton.y, 'RESUME', this.UIConfig).setOrigin(0.5, 0.5).setScrollFactor(0).setDepth(5);
+        this.resumeButton.setInteractive({
+            useHandCursor: true
+        });
+        this.resumeButton.on('pointerdown', () => {
+            this.unpauseGame();
+        });
+
+        this.UIConfig.fontSize = '18px';
+        this.UIConfig.color = '#000000'
+        this.restartButton = this.add.rectangle(game.config.width / 2, game.config.height / 2 + 40, 200, 50, 0xbbbbbb).setScrollFactor(0).setDepth(5);
+        this.restartButtonText = this.add.text(this.restartButton.x, this.restartButton.y, 'RESTART', this.UIConfig).setOrigin(0.5, 0.5).setScrollFactor(0).setDepth(5);
+        this.restartButton.setInteractive({
+            useHandCursor: true
+        });
+        this.restartButton.on('pointerdown', () => {
+            level = 2;
+            first_level = true;
+            this.scene.start('transitionScene');
+        });
+
+        this.UIConfig.fontSize = '18px';
+        this.UIConfig.color = '#000000'
+        this.quitButton = this.add.rectangle(game.config.width / 2, game.config.height / 2 + 100, 200, 50, 0xbbbbbb).setScrollFactor(0).setDepth(5);
+        this.quitButtonText = this.add.text(this.quitButton.x, this.quitButton.y, 'QUIT TO MENU', this.UIConfig).setOrigin(0.5, 0.5).setScrollFactor(0).setDepth(5);
+        this.quitButton.setInteractive({
+            useHandCursor: true
+        });
+        this.quitButton.on('pointerdown', () => {
+            this.scene.start('titleScene');
+        });
+
+        this.pauseText.alpha = 0;
+        this.resumeButton.alpha = 0;
+        this.resumeButtonText.alpha = 0;
+        this.restartButton.alpha = 0;
+        this.restartButtonText.alpha = 0;
+        this.quitButton.alpha = 0;
+        this.quitButtonText.alpha = 0;
+    }
+
+    pauseGame() {
+        this.player.setVelocity(0,0);
+        this.player.anims.stop();
+        this.walk.stop();
+        this.player.handleTexture();
+
+        this.paused = true;
+        this.pauseText.alpha = 1;
+        this.resumeButton.alpha = 1;
+        this.resumeButtonText.alpha = 1;
+        this.restartButton.alpha = 1;
+        this.restartButtonText.alpha = 1;
+        this.quitButton.alpha = 1;
+        this.quitButtonText.alpha = 1;
+    }
+
+    unpauseGame() {
+        this.paused = false;
+        this.pauseText.alpha = 0;
+        this.resumeButton.alpha = 0;
+        this.resumeButtonText.alpha = 0;
+        this.restartButton.alpha = 0;
+        this.restartButtonText.alpha = 0;
+        this.quitButton.alpha = 0;
+        this.quitButtonText.alpha = 0;
     }
 
     checkDepth(char) {
         if (this.player.y < char.y) {
-            //this.player.setDepth(1);
             char.setDepth(3);
         } else {
-            //this.player.setDepth(2);
             char.setDepth(1);
         }
     }
