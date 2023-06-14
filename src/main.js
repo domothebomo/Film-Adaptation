@@ -27,7 +27,7 @@ let config = {
         //mode: Phaser.Scale.FIT
     },
     zoom: 1.25,
-    scene: [ Title, Transition, Level1, Level2, Level3 ]
+    scene: [ Title, Transition, Select, Credits, Level1, Level2, Level3 ]
 }
 
 let game = new Phaser.Game(config);

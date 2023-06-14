@@ -633,7 +633,8 @@ class Level2 extends Phaser.Scene {
             color: '#FFFFFF',
             fontFamily: 'Verdana',
             fontSize: '15px',
-            align: 'center'
+            align: 'center',
+            fontStyle: 'Bold'
         };
 
         this.UIConfig.fontSize = '40px';

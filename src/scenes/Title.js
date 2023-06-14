@@ -26,14 +26,15 @@ class Title extends Phaser.Scene {
       color: '#000000',
       fontFamily: 'Verdana',
       fontSize: '15px',
-      align: 'center'
+      align: 'center',
+      fontStyle: 'Bold'
     };
 
     // TITLE TEXT
     this.UIConfig.fontSize = '40px';
-    this.titleText = this.add.text(game.config.width/2, game.config.height/2 - 150, 'Dr. Strangelove', this.UIConfig).setAlign('center').setOrigin(0.5,0);
+    this.titleText = this.add.text(game.config.width/2, game.config.height/2 - 150, 'Dr. Strangelove', this.UIConfig).setAlign('center').setOrigin(0.5,0).setFontStyle('bold');;
     this.UIConfig.fontSize = '25px';
-    this.subtTitleText = this.add.text(game.config.width/2, game.config.height/2 - 100, 'or: How I Learned to Stop Worrying and Love the Bomb', this.UIConfig).setAlign('center').setOrigin(0.5,0);
+    this.subtTitleText = this.add.text(game.config.width/2, game.config.height/2 - 100, 'or: How I Learned to Stop Worrying and Love the Bomb', this.UIConfig).setAlign('center').setOrigin(0.5,0).setFontStyle('bold');;
 
     // PLAY BUTTON
     
@@ -44,7 +45,7 @@ class Title extends Phaser.Scene {
       useHandCursor: true
     });
     this.playButton.on('pointerdown', () => {
-      level = 1;
+      level = 0;
       this.scene.start('transitionScene');
     });
 
@@ -56,8 +57,7 @@ class Title extends Phaser.Scene {
       useHandCursor: true
     });
     this.modeButton.on('pointerdown', () => {
-      level = 2;
-      this.scene.start('transitionScene');
+      this.scene.start('selectScene');
     });
 
     // CREDITS BUTTON
@@ -68,6 +68,7 @@ class Title extends Phaser.Scene {
       useHandCursor: true
     });
     this.creditsButton.on('pointerdown', () => {
+      this.scene.start('creditsScene');
     });
 
     level = 0;

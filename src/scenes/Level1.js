@@ -495,7 +495,8 @@ class Level1 extends Phaser.Scene {
             color: '#FFFFFF',
             fontFamily: 'Verdana',
             fontSize: '15px',
-            align: 'center'
+            align: 'center',
+            fontStyle: 'Bold'
         };
 
         this.UIConfig.fontSize = '40px';
@@ -522,6 +523,8 @@ class Level1 extends Phaser.Scene {
         this.restartButton.on('pointerdown', () => {
             level = 0;
             first_level = true;
+            this.ambience.stop();
+            this.music.stop();
             this.scene.start('transitionScene');
         });
 
