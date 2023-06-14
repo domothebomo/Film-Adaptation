@@ -12,7 +12,7 @@ class Title extends Phaser.Scene {
     this.load.image('explosion', './sprites/explosion.png');
 
     // AUDIO
-    this.load.audio('blip', './audio/blip4.wav'); // https://freesound.org/people/SoftDistortionFX/sounds/398937/
+    this.load.audio('blip', './audio/blip4.wav'); 
   }
 
   create() {
@@ -20,6 +20,17 @@ class Title extends Phaser.Scene {
     // BACKGROUND SPRITES
     this.background = this.add.tileSprite(0,0, game.config.width * 2, game.config.height * 2, 'explosion').setOrigin(0,0).setScale(2,2);     
     
+
+    // TITLE TEXT STYLE
+    this.TitleConfig = {
+      color: '#800000',
+      fontFamily: 'Verdana',
+      fontSize: '40px',
+      align: 'center',
+      fontStyle: 'Bold',
+      strokeThickness: 3,
+      stroke: '#000000'
+    };
 
     // UI TEXT STYLE
     this.UIConfig = {
@@ -31,14 +42,14 @@ class Title extends Phaser.Scene {
     };
 
     // TITLE TEXT
-    this.UIConfig.fontSize = '40px';
-    this.titleText = this.add.text(game.config.width/2, game.config.height/2 - 150, 'Dr. Strangelove', this.UIConfig).setAlign('center').setOrigin(0.5,0).setFontStyle('bold');;
-    this.UIConfig.fontSize = '25px';
-    this.subtTitleText = this.add.text(game.config.width/2, game.config.height/2 - 100, 'or: How I Learned to Stop Worrying and Love the Bomb', this.UIConfig).setAlign('center').setOrigin(0.5,0).setFontStyle('bold');;
+    //this.UIConfig.fontSize = '40px';
+    this.titleText = this.add.text(game.config.width/2, game.config.height/2 - 150, 'Dr. Strangelove', this.TitleConfig).setOrigin(0.5,0);
+    this.TitleConfig.fontSize = '25px';
+    this.subtTitleText = this.add.text(game.config.width/2, game.config.height/2 - 100, 'or: How I Learned to Stop Worrying\nand Love the Bomb', this.TitleConfig).setOrigin(0.5,0);
 
     // PLAY BUTTON
     
-    this.UIConfig.fontSize = '15px';
+    this.UIConfig.fontSize = '18px';
     this.playButton = this.add.rectangle(game.config.width / 2, game.config.height / 2, 200, 50, 0xbbbbbb);
     this.playButtonText = this.add.text(this.playButton.x, this.playButton.y, 'PLAY', this.UIConfig).setOrigin(0.5, 0.5);
     this.playButton.setInteractive({

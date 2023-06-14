@@ -6,7 +6,6 @@ class Dialogue {
         // DIALOGUE OBJECT ATTRIBUTES:
         // text: The text to be displayed during dialogue
         // speaker: Who is speaking in each string of the text
-        // response: Dialogue options if player input is requested
         // unlocked: Whether this dialogue can be accessed yet
         // onCompletion: Function that triggers once dialogue finishes
         this.dialogue = dialogue;

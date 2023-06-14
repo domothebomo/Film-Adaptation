@@ -3,10 +3,6 @@ class Transition extends Phaser.Scene {
         super('transitionScene');
     }
 
-    preload() {
-        //this.load.image('explosion', './assets/sprites/explosion.png');
-    }
-
     create() {
         this.blip = this.sound.add("blip", {
             volume: 0.01,

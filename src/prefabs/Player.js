@@ -19,7 +19,6 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         // ATTRIBUTES
         this.moveSpeed = 200;
-        //this.moveSpeed = 500;
         this.interacting = false;
         this.walking = false;
 
@@ -47,7 +46,6 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         // MOVEMENT ANIMATIONS
         if (this.direction.x != 0 || this.direction.y != 0) {
             this.handleAnim();
-            //this.play('player_walk', true);
             if (!this.walking) {
                 this.scene.walk.play();
                 this.walking = true;
@@ -55,7 +53,6 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         } else {
             this.anims.stop();
             this.handleTexture()
-            //this.setTexture('player');
             if (this.walking) {
                 this.scene.walk.stop();
                 this.walking = false;
@@ -65,6 +62,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     }
 
+    // Animation depends on scene
     handleAnim() {
         switch (level) {
             case 0:
@@ -75,6 +73,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
                 break;
         }
     }
+    // Texture depends on scene
     handleTexture() {
         switch (level) {
             case 0:

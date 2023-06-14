@@ -39,7 +39,7 @@ class Level3 extends Phaser.Scene {
         this.load.spritesheet('strangelove_stand', './sprites/strangelove_stand.png', {frameWidth: 18, frameHeight: 28, startFrame: 0, endFrame: 4});
         
         // AUDIO
-        this.load.audio('slide', './audio/slide3.wav'); // https://pixabay.com/sound-effects/sliding-noise-v2-83483/
+        this.load.audio('slide', './audio/slide3.wav');
         this.load.audio('walk', './audio/walk2.mp3');
         this.load.audio('end_music', './audio/wellmeetagain.mp3');
         this.load.audio('rumble', './audio/rumble.wav');

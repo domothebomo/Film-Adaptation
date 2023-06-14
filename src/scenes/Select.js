@@ -18,6 +18,17 @@ class Select extends Phaser.Scene {
 
         keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
 
+        // TITLE TEXT STYLE
+        this.TitleConfig = {
+            color: '#800000',
+            fontFamily: 'Verdana',
+            fontSize: '40px',
+            align: 'center',
+            fontStyle: 'Bold',
+            strokeThickness: 3,
+            stroke: '#000000'
+        };
+
         // UI TEXT STYLE
         this.UIConfig = {
             color: '#000000',
@@ -28,8 +39,7 @@ class Select extends Phaser.Scene {
         };
   
         // TITLE TEXT
-        this.UIConfig.fontSize = '40px';
-        this.titleText = this.add.text(game.config.width/2, game.config.height/2 - 250, 'SCENE SELECT', this.UIConfig).setAlign('center').setOrigin(0.5,0);
+        this.titleText = this.add.text(game.config.width/2, game.config.height/2 - 250, 'SCENE SELECT', this.TitleConfig).setAlign('center').setOrigin(0.5,0);
         this.UIConfig.fontSize = '18px';
         this.exitTip = this.add.text(15, 10, 'Press ESC to Return to Main Menu', this.UIConfig).setAlign('left').setOrigin(0,0);
 

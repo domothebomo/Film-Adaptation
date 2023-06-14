@@ -56,9 +56,7 @@ class Interactable extends Phaser.Physics.Arcade.Sprite {
                 this.scene.closeRadioTip();
             }
             this.interactWith();
-        } //else if (this.scene.speakingTo == this && Phaser.Input.Keyboard.JustDown(keySPACE)) {
-        //    this.interactWith();
-        //}
+        }
 
     }
 

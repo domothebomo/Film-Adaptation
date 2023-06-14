@@ -43,7 +43,7 @@ class Level1 extends Phaser.Scene {
         // AUDIO
         this.load.audio('music', './audio/hummm.mp3');
         this.load.audio('ambience', './audio/plane_ambience.wav'); // https://freesound.org/s/584597/
-        this.load.audio('walk', './audio/walk.wav');
+        this.load.audio('walk', './audio/walk.wav'); // https://freesound.org/people/SoftDistortionFX/sounds/398937/
         
     }
 
@@ -396,9 +396,6 @@ class Level1 extends Phaser.Scene {
         // OTHER UI
         this.exitTip = this.add.text(620, 610, 'Press ESC to exit to main menu', {color: '#000000', fontSize: '18px'}).setDepth(2);
         this.exitTip.setScrollFactor(0);
-
-        //this.controlsTip = this.add.text(10, 10, 'Arrow keys to move, SPACE to interact with objects and progress dialogue', {color: '#000000', fontSize: '18px'}).setDepth(2);
-        //this.controlsTip.setScrollFactor(0);
 
         this.radioTip = this.add.sprite(10, -4, 'radio_tip').setDepth(1).setOrigin(0,0).setScale(4,4);
         this.radioTip.setScrollFactor(0);
