@@ -1,6 +1,7 @@
 /**
  * Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb
  * developed by Dominic Fanaris
+ * Hours Spent: ~50 hours
  * 
  * Creative Tilt:
  * - I spent a lot of time making an enormous amount of unique assets so that every scene was entirely unique in the art it used. Every visual asset in the game was created by me, and I'm quite proud of how they turned out.
