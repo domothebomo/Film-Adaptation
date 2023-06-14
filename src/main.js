@@ -1,9 +1,10 @@
 /**
- * Dominic Fanaris
- * Title:
- * Hours Spent:
+ * Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb
+ * developed by Dominic Fanaris
  * 
- * 
+ * Creative Tilt:
+ * - I spent a lot of time making an enormous amount of unique assets so that every scene was entirely unique in the art it used. Every visual asset in the game was created by me, and I'm quite proud of how they turned out.
+ * - A fun extra addition I added was a level selector, that allows the player to choose any of the three scenes to play immediately, instead of having to start from the beginning.
  */
 
 let config = {
