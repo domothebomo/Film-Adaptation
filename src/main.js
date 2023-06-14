@@ -16,15 +16,9 @@ let config = {
     },
     physics: {
         default: 'arcade',
-        arcade: {
-            //debug: true
-        }
     },
     render: {
         pixelArt: true
-    },
-    scale: {
-        //mode: Phaser.Scale.FIT
     },
     zoom: 1.25,
     scene: [ Title, Transition, Select, Credits, Level1, Level2, Level3 ]
@@ -32,8 +26,6 @@ let config = {
 
 let game = new Phaser.Game(config);
 let keySPACE, keyESC, keyR;
-//let highestTime = 0;
-//let tutorial = false;
 let level;
 let endMusic;
 let first_level = true;

@@ -42,13 +42,11 @@ class Title extends Phaser.Scene {
     };
 
     // TITLE TEXT
-    //this.UIConfig.fontSize = '40px';
     this.titleText = this.add.text(game.config.width/2, game.config.height/2 - 150, 'Dr. Strangelove', this.TitleConfig).setOrigin(0.5,0);
     this.TitleConfig.fontSize = '25px';
     this.subtTitleText = this.add.text(game.config.width/2, game.config.height/2 - 100, 'or: How I Learned to Stop Worrying\nand Love the Bomb', this.TitleConfig).setOrigin(0.5,0);
 
     // PLAY BUTTON
-    
     this.UIConfig.fontSize = '18px';
     this.playButton = this.add.rectangle(game.config.width / 2, game.config.height / 2, 200, 50, 0xbbbbbb);
     this.playButtonText = this.add.text(this.playButton.x, this.playButton.y, 'PLAY', this.UIConfig).setOrigin(0.5, 0.5);
@@ -61,7 +59,6 @@ class Title extends Phaser.Scene {
     });
 
     // SCENE SELECT MODE BUTTON
-    
     this.modeButton = this.add.rectangle(game.config.width / 2, game.config.height / 2 + 60, 200, 50, 0xbbbbbb);
     this.modeButtonText = this.add.text(this.modeButton.x, this.modeButton.y, 'SCENE SELECT', this.UIConfig).setOrigin(0.5, 0.5);
     this.modeButton.setInteractive({
@@ -72,7 +69,6 @@ class Title extends Phaser.Scene {
     });
 
     // CREDITS BUTTON
-    
     this.creditsButton = this.add.rectangle(game.config.width / 2, game.config.height / 2 + 120, 200, 50, 0xbbbbbb);
     this.creditsButtonText = this.add.text(this.creditsButton.x, this.creditsButton.y, 'CREDITS', this.UIConfig).setOrigin(0.5, 0.5);
     this.creditsButton.setInteractive({

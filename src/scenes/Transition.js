@@ -4,10 +4,8 @@ class Transition extends Phaser.Scene {
     }
 
     create() {
-        this.blip = this.sound.add("blip", {
-            volume: 0.01,
-        });
 
+        // CONTROLS
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
         // UI TEXT STYLE
@@ -21,12 +19,14 @@ class Transition extends Phaser.Scene {
         this.dialogueText = this.add.text(198, 66, '', this.UIConfig).setWordWrapWidth(600).setAlign('left').setOrigin(0,0).setDepth(1);
 
         this.introDialogue = introDialogue[level];
+        // If control instructions are needed
         if (first_level) {
             this.introDialogue += '\n\nUse the ARROW keys to move, SPACE to interact with objects and individuals, and ESC to pause the game.';
         }
         if (level != 3) {
             this.introDialogue += '\n\nPress SPACE to continue';
         } else {
+            // ENDING SCREEN
             this.dialogueText.setFontSize('40px').setColor('#000000').setAlign('center').setY(300).setX(game.config.width/2).setOrigin(0.5,0.5);
             this.background = this.add.sprite(0,0, 'explosion').setScale(2,2).setOrigin(0,0);
             this.transitionScreen = this.add.rectangle(0,0, game.config.width*4, game.config.height*4, '0xFFFFFF', 1).setDepth(4);
@@ -70,9 +70,6 @@ class Transition extends Phaser.Scene {
             callback: () => {
                 this.dialogueText.text += text[letterCount];
                 letterCount += 1;
-                if (text[letterCount] != " ") {
-                    //this.blip.play();
-                }
             },
             repeat: text.length - 1,
             delay: 10

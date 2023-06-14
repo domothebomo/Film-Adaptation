@@ -11,6 +11,7 @@ class Level2 extends Phaser.Scene {
         this.load.image('plane_hbounds', './sprites/plane_hbounds.png');
         this.load.image('plane_vbounds', './sprites/plane_vbounds.png');
 
+        // BACKGROUND
         this.load.image('air_base', './sprites/air_base.png');
 
         // UI
@@ -25,7 +26,6 @@ class Level2 extends Phaser.Scene {
         this.load.image('phonebooth', './sprites/phonebooth.png');
         this.load.image('vending_machine', './sprites/vending_machine.png');
         this.load.image('gunrack', './sprites/gunrack.png');
-        
 
         // CHARACTERS
         this.load.image('mandrake', './sprites/mandrake.png');
@@ -42,9 +42,9 @@ class Level2 extends Phaser.Scene {
         this.load.spritesheet('guano_walk', './sprites/guano_walk.png', {frameWidth: 12, frameHeight: 28, startFrame: 0, endFrame: 1});
 
         // AUDIO
-        this.load.audio('walk2', './audio/walk2.mp3'); // https://pixabay.com/sound-effects/concrete-footsteps-6752/
-        this.load.audio('gunshot', './audio/gunshot.mp3'); // https://pixabay.com/sound-effects/single-gunshot-62-hp-37188/
-        this.load.audio('open_door', './audio/open_door.mp3'); // https://pixabay.com/sound-effects/dorm-door-opening-6038/
+        this.load.audio('walk2', './audio/walk2.mp3');
+        this.load.audio('gunshot', './audio/gunshot.mp3');
+        this.load.audio('open_door', './audio/open_door.mp3'); 
     }
 
     create() {
@@ -122,7 +122,7 @@ class Level2 extends Phaser.Scene {
                 onCompletion: () => {}
             }));
 
-            // GUNRACK
+            // GUN RACK
             gunrackDialogue.push(new Dialogue(this, {
                 text: [
                         `*The General has quite a few vintage weapons on display...*`,
@@ -250,6 +250,7 @@ class Level2 extends Phaser.Scene {
                 onCompletion: () => {}
             }));
 
+            // SOLDIERS
             soldierDialogue.push(new Dialogue(this, {
                 text: [
                         `Captured personnel are to be brought to the main gate. You can't go this way.`                 
@@ -269,6 +270,7 @@ class Level2 extends Phaser.Scene {
                 onCompletion: () => {}
             }));
 
+            // COLONEL GUANO
             guanoDialogue.push(new Dialogue(this, {
                 text: [
                         `Put your hands over your head.`,
@@ -412,6 +414,7 @@ class Level2 extends Phaser.Scene {
                 }
             }));
 
+            // VENDING MACHINE
             vendingMachineDialogue.push(new Dialogue(this, {
                 text: [
                         `*I could use a drink...*`                 
@@ -434,6 +437,7 @@ class Level2 extends Phaser.Scene {
                 }
             }));
 
+            // PHONEBOOK
             phoneboothDialogue.push(new Dialogue(this, {
                 text: [
                         `*You insert the few coins you have left and attempt to call SAC...*`,
@@ -482,7 +486,6 @@ class Level2 extends Phaser.Scene {
             }));
         }
         
-
         // PLAYER CLASS
         this.player = new Player(this, game.config.width - 250, game.config.height - 110, 'mandrake').setDepth(1).setScale(4,4);   
         this.speakingTo = null;
@@ -595,26 +598,10 @@ class Level2 extends Phaser.Scene {
 
         if (!this.ending && !this.paused) {
             // UPDATE PLAYER
-            this.player.update();
-            this.checkDepth();
-            this.checkPosition();
+            this.updatePlayer();
 
             // UPDATE INTERACTABLE OBJECTS/CHARS
-            if (this.officeDoor) {
-                this.officeDoor.update();
-            }
-            this.notes.update();
-            this.phone1.update();
-            this.phone2.update();
-            this.couch.update();
-            this.bathroom.update();
-            this.gunrack.update();
-            this.vendingMachine.update();
-            this.phonebooth.update();
-            this.guano.update()
-            this.soldier1.update();
-            this.soldier2.update();
-            this.soldier3.update();
+            this.updateOthers();
 
             if (Phaser.Input.Keyboard.JustDown(keyESC)) {
                 this.pauseGame();
@@ -627,6 +614,30 @@ class Level2 extends Phaser.Scene {
 
     }
 
+    updatePlayer() {
+        this.player.update();
+        this.checkDepth();
+        this.checkPosition();
+    }
+
+    updateOthers() {
+        if (this.officeDoor) {
+            this.officeDoor.update();
+        }
+        this.notes.update();
+        this.phone1.update();
+        this.phone2.update();
+        this.couch.update();
+        this.bathroom.update();
+        this.gunrack.update();
+        this.vendingMachine.update();
+        this.phonebooth.update();
+        this.guano.update()
+        this.soldier1.update();
+        this.soldier2.update();
+        this.soldier3.update();
+    }
+
     createPauseMenu() {
         // UI TEXT STYLE
         this.UIConfig = {
@@ -637,9 +648,11 @@ class Level2 extends Phaser.Scene {
             fontStyle: 'Bold'
         };
 
+        // 'PAUSED' TEXT
         this.UIConfig.fontSize = '40px';
         this.pauseText = this.add.text(game.config.width/2, game.config.height/2 - 100, 'PAUSED', this.UIConfig).setAlign('center').setOrigin(0.5,0).setScrollFactor(0).setDepth(5);
 
+        // RESUME BUTTON
         this.UIConfig.fontSize = '18px';
         this.UIConfig.color = '#000000'
         this.resumeButton = this.add.rectangle(game.config.width / 2, game.config.height / 2 - 20, 200, 50, 0xbbbbbb).setScrollFactor(0).setDepth(5);
@@ -651,6 +664,7 @@ class Level2 extends Phaser.Scene {
             this.unpauseGame();
         });
 
+        // RESTART BUTTON
         this.UIConfig.fontSize = '18px';
         this.UIConfig.color = '#000000'
         this.restartButton = this.add.rectangle(game.config.width / 2, game.config.height / 2 + 40, 200, 50, 0xbbbbbb).setScrollFactor(0).setDepth(5);
@@ -664,6 +678,7 @@ class Level2 extends Phaser.Scene {
             this.scene.start('transitionScene');
         });
 
+        // QUIT BUTTON
         this.UIConfig.fontSize = '18px';
         this.UIConfig.color = '#000000'
         this.quitButton = this.add.rectangle(game.config.width / 2, game.config.height / 2 + 100, 200, 50, 0xbbbbbb).setScrollFactor(0).setDepth(5);
@@ -675,6 +690,7 @@ class Level2 extends Phaser.Scene {
             this.scene.start('titleScene');
         });
 
+        // HIDE PAUSE UI
         this.pauseText.alpha = 0;
         this.resumeButton.alpha = 0;
         this.resumeButtonText.alpha = 0;
@@ -685,11 +701,13 @@ class Level2 extends Phaser.Scene {
     }
 
     pauseGame() {
+        // STOP PLAYER MOVEMENT/ANIMATIONS
         this.player.setVelocity(0,0);
         this.player.anims.stop();
         this.walk.stop();
         this.player.handleTexture();
 
+        // SHOW PAUSE UI
         this.paused = true;
         this.pauseText.alpha = 1;
         this.resumeButton.alpha = 1;
@@ -701,6 +719,7 @@ class Level2 extends Phaser.Scene {
     }
 
     unpauseGame() {
+        // HIDE PAUSE UI
         this.paused = false;
         this.pauseText.alpha = 0;
         this.resumeButton.alpha = 0;
@@ -722,14 +741,15 @@ class Level2 extends Phaser.Scene {
     }
     
     checkPosition() {
+        // PROGRESS NARRATIVE WHEN PLAYER REACHES A CERTAIN POINT
         if (this.player.x > game.config.width && this.player.y > game.config.height - 200 && (this.guano.dialoguesCompleted == 2 || this.guano.dialoguesCompleted == 3) && this.guano.dialogues[3].dialogue.unlocked == false) {
-            //console.log('yipee');
             this.player.setVelocity(0,0);
             this.walk.stop();
             this.player.anims.stop();
             this.player.setTexture('mandrake');
             this.walking = false;
 
+            // MOVE COLONEL GUANO AROUND
             this.paused = true;
             this.guano.setFlipX(false);
             this.guano.setVelocity(0, -200);

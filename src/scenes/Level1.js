@@ -42,8 +42,8 @@ class Level1 extends Phaser.Scene {
 
         // AUDIO
         this.load.audio('music', './audio/hummm.mp3');
-        this.load.audio('ambience', './audio/plane_ambience.wav'); // https://freesound.org/s/584597/
-        this.load.audio('walk', './audio/walk.wav'); // https://freesound.org/people/SoftDistortionFX/sounds/398937/
+        this.load.audio('ambience', './audio/plane_ambience.wav');
+        this.load.audio('walk', './audio/walk.wav');
         
     }
 
@@ -113,6 +113,7 @@ class Level1 extends Phaser.Scene {
                 onCompletion: () => {}
             }));
 
+            // EQUIPMENT
             equipmentDialogue.push(new Dialogue(this, {
                 text: [
                         `*Various equipment to manage the weapons and systems of the B-52*`,
@@ -123,7 +124,6 @@ class Level1 extends Phaser.Scene {
                 unlocked: true,
                 onCompletion: () => {}
             }));
-
 
             // RADIO
             radioDialogue.push(new Dialogue(this, {
@@ -457,14 +457,7 @@ class Level1 extends Phaser.Scene {
             this.player.update();
 
             // UPDATE INTERACTABLE OBJECTS + CHARACTERS
-            this.radio.update();
-            this.codebook.update();
-            this.cockpit.update();
-            this.kong.update();
-            this.lothar.update();
-            this.ace.update();
-            this.safe.update();
-            this.equipment1.update();
+            this.updateOthers();
 
             if (Phaser.Input.Keyboard.JustDown(keyR)) {
                 this.activateRadio();
@@ -486,6 +479,17 @@ class Level1 extends Phaser.Scene {
 
     }
 
+    updateOthers() {
+        this.radio.update();
+        this.codebook.update();
+        this.cockpit.update();
+        this.kong.update();
+        this.lothar.update();
+        this.ace.update();
+        this.safe.update();
+        this.equipment1.update();
+    }
+
     createPauseMenu() {
         // UI TEXT STYLE
         this.UIConfig = {
@@ -496,9 +500,11 @@ class Level1 extends Phaser.Scene {
             fontStyle: 'Bold'
         };
 
+        // 'PAUSED' TEXT
         this.UIConfig.fontSize = '40px';
         this.pauseText = this.add.text(game.config.width/2, game.config.height/2 - 100, 'PAUSED', this.UIConfig).setAlign('center').setOrigin(0.5,0).setScrollFactor(0).setDepth(5);
 
+        // RESUME BUTTON
         this.UIConfig.fontSize = '18px';
         this.UIConfig.color = '#000000'
         this.resumeButton = this.add.rectangle(game.config.width / 2, game.config.height / 2 - 20, 200, 50, 0xbbbbbb).setScrollFactor(0).setDepth(5);
@@ -510,6 +516,7 @@ class Level1 extends Phaser.Scene {
             this.unpauseGame();
         });
 
+        // RESTART BUTTON
         this.UIConfig.fontSize = '18px';
         this.UIConfig.color = '#000000'
         this.restartButton = this.add.rectangle(game.config.width / 2, game.config.height / 2 + 40, 200, 50, 0xbbbbbb).setScrollFactor(0).setDepth(5);
@@ -525,6 +532,7 @@ class Level1 extends Phaser.Scene {
             this.scene.start('transitionScene');
         });
 
+        // QUIT BUTTON
         this.UIConfig.fontSize = '18px';
         this.UIConfig.color = '#000000'
         this.quitButton = this.add.rectangle(game.config.width / 2, game.config.height / 2 + 100, 200, 50, 0xbbbbbb).setScrollFactor(0).setDepth(5);
@@ -538,6 +546,7 @@ class Level1 extends Phaser.Scene {
             this.scene.start('titleScene');
         });
 
+        // HIDE PAUSE UI
         this.pauseText.alpha = 0;
         this.resumeButton.alpha = 0;
         this.resumeButtonText.alpha = 0;
@@ -548,11 +557,13 @@ class Level1 extends Phaser.Scene {
     }
 
     pauseGame() {
+        // STOP PLAYER MOVEMENT/ANIMATIONS
         this.player.setVelocity(0,0);
         this.player.anims.stop();
         this.walk.stop();
         this.player.handleTexture();
 
+        // SHOW PAUSE UI
         this.paused = true;
         this.pauseText.alpha = 1;
         this.resumeButton.alpha = 1;
@@ -564,6 +575,7 @@ class Level1 extends Phaser.Scene {
     }
 
     unpauseGame() {
+        // HIDE PAUSE UI
         this.paused = false;
         this.pauseText.alpha = 0;
         this.resumeButton.alpha = 0;

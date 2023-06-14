@@ -440,22 +440,9 @@ class Level3 extends Phaser.Scene {
 
     update() {
         if (!this.ending && !this.paused) {
-            // UPDATE PLAYER
-            this.player.update();
-            this.checkDepth(this.muffley);
-            this.checkDepth(this.alexei);
-            this.checkDepth(this.turgidson);
+            this.updatePlayer();
 
-            this.board.update();
-            this.chart.update();
-
-            this.muffley.update();
-            this.turgidson.update();
-            this.alexei.update();
-            this.official1.update();
-            this.official2.update();
-            this.official3.update();
-            this.official4.update();
+            this.updateOthers();
 
             if (Phaser.Input.Keyboard.JustDown(keyESC)) {
                 this.pauseGame();
@@ -465,6 +452,26 @@ class Level3 extends Phaser.Scene {
         if (Phaser.Input.Keyboard.JustDown(keyESC) && this.pauseText.alpha == 1) {
             this.unpauseGame();
         }
+    }
+
+    updatePlayer() {
+        this.player.update();
+        this.checkDepth(this.muffley);
+        this.checkDepth(this.alexei);
+        this.checkDepth(this.turgidson);
+    }
+
+    updateOthers() {
+        this.board.update();
+        this.chart.update();
+
+        this.muffley.update();
+        this.turgidson.update();
+        this.alexei.update();
+        this.official1.update();
+        this.official2.update();
+        this.official3.update();
+        this.official4.update();
     }
 
     createPauseMenu() {
@@ -477,9 +484,11 @@ class Level3 extends Phaser.Scene {
             fontStyle: 'Bold'
         };
 
+        // 'PAUSED' TEXT
         this.UIConfig.fontSize = '40px';
         this.pauseText = this.add.text(game.config.width/2, game.config.height/2 - 100, 'PAUSED', this.UIConfig).setAlign('center').setOrigin(0.5,0).setScrollFactor(0).setDepth(5);
 
+        // RESUME BUTTON
         this.UIConfig.fontSize = '18px';
         this.UIConfig.color = '#000000'
         this.resumeButton = this.add.rectangle(game.config.width / 2, game.config.height / 2 - 20, 200, 50, 0xbbbbbb).setScrollFactor(0).setDepth(5);
@@ -491,6 +500,7 @@ class Level3 extends Phaser.Scene {
             this.unpauseGame();
         });
 
+        // RESTART BUTTON
         this.UIConfig.fontSize = '18px';
         this.UIConfig.color = '#000000'
         this.restartButton = this.add.rectangle(game.config.width / 2, game.config.height / 2 + 40, 200, 50, 0xbbbbbb).setScrollFactor(0).setDepth(5);
@@ -504,6 +514,7 @@ class Level3 extends Phaser.Scene {
             this.scene.start('transitionScene');
         });
 
+        // QUIT BUTTON
         this.UIConfig.fontSize = '18px';
         this.UIConfig.color = '#000000'
         this.quitButton = this.add.rectangle(game.config.width / 2, game.config.height / 2 + 100, 200, 50, 0xbbbbbb).setScrollFactor(0).setDepth(5);
@@ -515,6 +526,7 @@ class Level3 extends Phaser.Scene {
             this.scene.start('titleScene');
         });
 
+        // HIDE PAUSE UI
         this.pauseText.alpha = 0;
         this.resumeButton.alpha = 0;
         this.resumeButtonText.alpha = 0;
@@ -525,11 +537,13 @@ class Level3 extends Phaser.Scene {
     }
 
     pauseGame() {
+        // STOP PLAYER MOVEMENT/ANIMATIONS
         this.player.setVelocity(0,0);
         this.player.anims.stop();
         this.walk.stop();
         this.player.handleTexture();
 
+        // SHOW PAUSE UI
         this.paused = true;
         this.pauseText.alpha = 1;
         this.resumeButton.alpha = 1;
@@ -541,6 +555,7 @@ class Level3 extends Phaser.Scene {
     }
 
     unpauseGame() {
+        // HIDE PAUSE UI
         this.paused = false;
         this.pauseText.alpha = 0;
         this.resumeButton.alpha = 0;
